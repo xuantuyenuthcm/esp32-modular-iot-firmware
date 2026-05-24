@@ -38,10 +38,14 @@
  * @brief I2C hardware defination
  */
 #include "driver_bme280_interface.h"
+
 #define I2C_MASTER_SDA_IO   21
 #define I2C_MASTER_SCL_IO   22
 #define I2C_MASTER_NUM      I2C_NUM_1    
-#define BME280_ADDRESS      (0x77)
+#define BME280_ADDRESS      0x77
+
+static i2c_master_dev_handle_t dev_handle = NULL;
+static const char *TAG_I2C = "I2C";
 
 /**
  * @brief  interface iic bus init
@@ -50,11 +54,6 @@
  *         - 1 iic init failed
  * @note   none
  */
-
-i2c_master_dev_handle_t dev_handle = NULL;
-static const char *TAG_I2C = "I2C";
-
-
 uint8_t bme280_interface_iic_init(void)
 {
         i2c_master_bus_config_t bus_cfg = {

@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include "esp_log.h"
 #include "bme280.h"
-#include "nvs_flash.h"
+#include "bh1750.h"
+#include "I2C_scan.h"
+void bme280_app(void);
 
 void app_main(void)
 {
+    i2c_scan();
+}
+
+void bme280_app(void) {
     bme280_I2C_init();
 
     float temperature;
