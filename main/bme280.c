@@ -170,13 +170,14 @@ uint8_t bme280_app_deinit(void) {
  */
 uint8_t bme280_I2C_init(void) {
     uint8_t res;
-    res = bme280_app_init(BME280_INTERFACE_IIC, 0x77);
+    res = bme280_app_init(BME280_INTERFACE_IIC, 0x76);
     if (res != 0) {
         return 1;
     }
     
     return 0;
 }
+
 /**         
  * @brief  test if the app work
  * @return none
@@ -189,9 +190,12 @@ void bme280_app_test(void) {
     float pressure;
     float humidity;
 
-    bme280_app_read(&temperature, &pressure, &humidity);
-    
-    printf("Temperature: %f.2\n", temperature);
-    printf("Pressure: %f.2\n", pressure);
-    printf("humidity: %f.2%%\n", humidity);
+    while (1) {
+        bme280_app_read(&temperature, &pressure, &humidity);
+        
+        printf("Temperature: %.2f\n", temperature);
+        printf("Pressure: %.2f\n", pressure);
+        printf("humidity: %.2f%%\n", humidity);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
 }

@@ -2,7 +2,7 @@
 
 #define I2C_MASTER_SCL_IO_SCAN   18
 #define I2C_MASTER_SDA_IO_SCAN   19
-#define I2C_MASTER_NUM_SCAN      I2C_NUM_0
+#define I2C_MASTER_NUM_SCAN      I2C_NUM_1
 
 static const char *TAG = "SCAN";
 
@@ -15,7 +15,7 @@ void i2c_scan_init()
         .i2c_port = I2C_MASTER_NUM_SCAN,
         .sda_io_num = I2C_MASTER_SDA_IO_SCAN,
         .scl_io_num = I2C_MASTER_SCL_IO_SCAN,
-        .glitch_ignore_cnt = 7,
+        .glitch_ignore_cnt = 0,
         .flags.enable_internal_pullup = true,
     };
 
@@ -30,9 +30,10 @@ void i2c_scan()
     for (int i = 0; i < 127; i++) {
         esp_err_t ret = i2c_master_probe(bus_handle, i, -1);
         if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "BH1750 found at %d", i);
+            ESP_LOGI(TAG, "BNO055 found at %d", i);
         } else {
             ESP_LOGW(TAG, "Not found at %d", i);
         }
     }
 }
+
