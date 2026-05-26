@@ -141,7 +141,7 @@ uint8_t bh1750fvi_basic_deinit(void)
  * @return none
  * @note   none
  */
-void bh1750_app_test() {
+void bh1750_app_test(void *pvParameter) {
     bh1750fvi_basic_init(BH1750FVI_ADDRESS_LOW);
 
     float lux = 0.0f;
@@ -153,6 +153,6 @@ void bh1750_app_test() {
             printf("Doc du lieu BH1750 that bai!\n");
         }
 
-        bh1750fvi_interface_delay_ms(500);
+        bh1750fvi_interface_delay_ms(1000);
     }
 }

@@ -182,7 +182,7 @@ uint8_t bmp280_I2C_init(void) {
  * @return none
  * @note   none
  */
-void bmp280_app_test(void) {
+void bmp280_app_test(void *pvParameter) {
     bmp280_I2C_init();
 
     float temperature;

@@ -1,11 +1,6 @@
-#include "driver/i2c_master.h"
-
-#define I2C_MASTER_SCL_IO_SCAN   18
-#define I2C_MASTER_SDA_IO_SCAN   19
-#define I2C_MASTER_NUM_SCAN      I2C_NUM_1
+#include "i2c_scan.h"
 
 static const char *TAG = "SCAN";
-
 static i2c_master_bus_handle_t bus_handle;
 
 void i2c_scan_init()
@@ -15,7 +10,7 @@ void i2c_scan_init()
         .i2c_port = I2C_MASTER_NUM_SCAN,
         .sda_io_num = I2C_MASTER_SDA_IO_SCAN,
         .scl_io_num = I2C_MASTER_SCL_IO_SCAN,
-        .glitch_ignore_cnt = 0,
+        .glitch_ignore_cnt = 7,
         .flags.enable_internal_pullup = true,
     };
 
@@ -36,4 +31,3 @@ void i2c_scan()
         }
     }
 }
-

@@ -43,6 +43,6 @@ uint8_t bh1750fvi_basic_deinit(void);
  * @return none
  * @note   none
  */
-void bh1750_app_test();
+void bh1750_app_test(void *pvParameter);
 
 #endif
