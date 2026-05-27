@@ -83,8 +83,7 @@ uint8_t bmp280_interface_iic_deinit(void)
 uint8_t bmp280_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     uint8_t reg_addr = reg;
-    // esp_err_t err = i2c_master_transmit_receive(dev_handle, &reg_addr, 1, buf, len, -1);
-    esp_err_t err = i2c_master_transmit_receive(bmp280_handle, &reg_addr, 1, buf, len, -1);
+    esp_err_t err = i2c_write_read_sensor(bmp280_handle, &reg_addr, 1, buf, len);
 
     return (err == ESP_OK) ? 0 : 1;
 }
@@ -109,7 +108,7 @@ uint8_t bmp280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_master_transmit(bmp280_handle, write_buf, len + 1, -1);
+    esp_err_t err = i2c_write_sensor(bmp280_handle, write_buf, len + 1);
 
     return (err == ESP_OK) ? 0 : 1;
 }

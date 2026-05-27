@@ -169,7 +169,7 @@ uint8_t bmp280_app_deinit(void)
  */
 uint8_t bmp280_I2C_init(void) {
     uint8_t res;
-    res = bmp280_app_init(BMP280_INTERFACE_IIC, BMP280_ADDRESS_ADO_LOW);
+    res = bmp280_app_init(BMP280_INTERFACE_IIC, 0x76);
     if (res != 0) {
         return 1;
     }

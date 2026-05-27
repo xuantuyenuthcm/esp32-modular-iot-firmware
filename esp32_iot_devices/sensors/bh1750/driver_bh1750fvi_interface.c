@@ -82,7 +82,7 @@ uint8_t bh1750fvi_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t l
 {
     // uint8_t reg_addr = buf;
     // esp_err_t err = i2c_master_transmit_receive(dev_handle, &reg_addr, 1, buf, len, -1);
-    esp_err_t err = i2c_master_transmit(bh1750_handle, buf, len, 500);
+    esp_err_t err = i2c_write_sensor(bh1750_handle, buf, len);
 
     return (err == ESP_OK) ? 0 : 1;
 }
@@ -99,7 +99,7 @@ uint8_t bh1750fvi_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t l
  */
 uint8_t bh1750fvi_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    esp_err_t err = i2c_master_receive(bh1750_handle, buf, len, 500);
+    esp_err_t err = i2c_read_sensor(bh1750_handle, buf, len);
 
     return (err == ESP_OK) ? 0 : 1;
 }
