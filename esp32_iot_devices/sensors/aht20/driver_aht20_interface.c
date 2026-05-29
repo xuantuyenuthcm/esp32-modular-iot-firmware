@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. 
  *
- * @file      driver_bh1750fvi_interface_template.c
- * @brief     driver bh1750fvi interface template source file
+ * @file      driver_aht20_interface_template.c
+ * @brief     driver aht20 interface template source file
  * @version   1.0.0
  * @author    Shifeng Li
- * @date      2022-11-30
+ * @date      2022-10-31
  *
  * <h3>history</h3>
  * <table>
  * <tr><th>Date        <th>Version  <th>Author      <th>Description
- * <tr><td>2022/11/30  <td>1.0      <td>Shifeng Li  <td>first upload
+ * <tr><td>2022/10/31  <td>1.0      <td>Shifeng Li  <td>first upload
  * </table>
  */
 
-#include "driver_bh1750fvi_interface.h"
-#include "i2c_manager.h"
-
-#define BH1750FVI_ADDRESS   0x23
-
-static i2c_master_dev_handle_t bh1750_handle = NULL;
+#include "driver_aht20_interface.h"
 
 /**
  * @brief  interface iic bus init
@@ -48,11 +43,8 @@ static i2c_master_dev_handle_t bh1750_handle = NULL;
  *         - 1 iic init failed
  * @note   none
  */
-uint8_t bh1750fvi_interface_iic_init(void)
+uint8_t aht20_interface_iic_init(void)
 {
-    i2c_add_device(BH1750FVI_ADDRESS, &bh1750_handle);
-    ESP_LOGI(TAG_I2C, "BH1750 sensor added to I2C bus!");
-    
     return 0;
 }
 
@@ -63,45 +55,39 @@ uint8_t bh1750fvi_interface_iic_init(void)
  *         - 1 iic deinit failed
  * @note   none
  */
-uint8_t bh1750fvi_interface_iic_deinit(void)
+uint8_t aht20_interface_iic_deinit(void)
 {
     return 0;
 }
 
 /**
- * @brief     interface iic bus write command
- * @param[in] addr iic device write address
- * @param[in] *buf pointer to a data buffer
- * @param[in] len length of data buffer
- * @return    status code
- *            - 0 success
- *            - 1 write failed
- * @note      none
- */
-uint8_t bh1750fvi_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
-{
-    // uint8_t reg_addr = buf;
-    // esp_err_t err = i2c_master_transmit_receive(dev_handle, &reg_addr, 1, buf, len, -1);
-    esp_err_t err = i2c_write_sensor(bh1750_handle, buf, len);
-
-    return (err == ESP_OK) ? 0 : 1;
-}
-
-/**
- * @brief      interface iic bus read command
+ * @brief      interface iic bus read
  * @param[in]  addr iic device write address
  * @param[out] *buf pointer to a data buffer
- * @param[in]  len length of data buffer
+ * @param[in]  len length of the data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
  * @note       none
  */
-uint8_t bh1750fvi_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
+uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    esp_err_t err = i2c_read_sensor(bh1750_handle, buf, len);
+    return 0;
+}
 
-    return (err == ESP_OK) ? 0 : 1;
+/**
+ * @brief     interface iic bus write
+ * @param[in] addr iic device write address
+ * @param[in] *buf pointer to a data buffer
+ * @param[in] len length of the data buffer
+ * @return    status code
+ *            - 0 success
+ *            - 1 write failed
+ * @note      none
+ */
+uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
+{
+    return 0;
 }
 
 /**
@@ -109,9 +95,9 @@ uint8_t bh1750fvi_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t le
  * @param[in] ms time
  * @note      none
  */
-void bh1750fvi_interface_delay_ms(uint32_t ms)
+void aht20_interface_delay_ms(uint32_t ms)
 {
-    vTaskDelay(pdMS_TO_TICKS(ms));
+
 }
 
 /**
@@ -119,12 +105,7 @@ void bh1750fvi_interface_delay_ms(uint32_t ms)
  * @param[in] fmt format data
  * @note      none
  */
-void bh1750fvi_interface_debug_print(const char *const fmt, ...)
+void aht20_interface_debug_print(const char *const fmt, ...)
 {
-    va_list args;
-    va_start(args, fmt);
-
-    esp_log_writev(ESP_LOG_INFO, "BH1750", fmt, args);
-
-    va_end(args);
+    
 }

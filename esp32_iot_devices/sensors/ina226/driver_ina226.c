@@ -1771,7 +1771,7 @@ uint8_t ina226_init(ina226_handle_t *handle)
     res = a_ina226_iic_read(handle, INA226_REG_MANUFACTURER, (uint16_t *)&prev);       /* read manufacturer */
     if (res != 0)                                                                      /* check result */
     {
-        handle->debug_print("ina226: read manufacturer failed.\n");                    /* read manufacturer failed */
+        handle->debug_print("ina226: read manufacturer failed = %d.\n", prev);                    /* read manufacturer failed */
         (void)handle->iic_deinit();                                                    /* iic deinit */
        
         return 4;                                                                      /* return error */
