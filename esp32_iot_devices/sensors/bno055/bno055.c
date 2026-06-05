@@ -1,5 +1,5 @@
 #include "bno055.h"
-
+#include "esp_log.h"
 static const char *TAG = "bno055";
 
 void bno055_I2C_init() {
@@ -50,19 +50,22 @@ void bno055_ndof_task(void *pvParameters) {
     bno055_quaternion_t quat;
     bno055_vec3_t lin_accel;
     bno055_vec3_t gravity;
-    
+    printf("\033[2J\033[H");
+    printf("\033[?25l");    
     while( 1 ) {
 		err = bno055_get_fusion_data(0, &quat, &lin_accel, &gravity);
-	
 		if( err != ESP_OK ) {
 			printf("bno055_get_fusion_data() returned error: %02x \n", err);
 		}
-
-		printf("%.6f\t%.6f\t%.6f\t%.6f\t", quat.w, quat.x, quat.y, quat.z);
-        printf("%.2f\t%.2f\t%.2f\t", lin_accel.x, lin_accel.y, lin_accel.z );
-        printf("%.2f\t%.2f\t%.2f\n", gravity.x, gravity.y, gravity.z );
-
-    	bno055_interface_delay_ms(100);
+        // ESP_LOGI("Start", "===========");
+		// printf("quat.w=%.6f\tquat.x=%.6f\tquat.y=%.6f\tquat.z=%.6f\t\n", quat.w, quat.x, quat.y, quat.z);
+        // printf("accel.x=%.2f\taccel.y=%.2f\taccel.z=%.2f\t\n", lin_accel.x, lin_accel.y, lin_accel.z );
+        // printf("gravity.x=%.2f\tgravity.y=%.2f\tgravity.z=%.2f\n", gravity.x, gravity.y, gravity.z );
+		printf("quat.w=%10.6f quat.x=%10.6f quat.y=%10.6f quat.z=%10.6f\n", quat.w, quat.x, quat.y, quat.z);
+        printf("accel.x=%.2f\taccel.y=%.2f\taccel.z=%.2f\t\n", lin_accel.x, lin_accel.y, lin_accel.z );
+        printf("gravity.x=%.2f\tgravity.y=%.2f\tgravity.z=%.2f\n", gravity.x, gravity.y, gravity.z );
+        printf("\033[H");
+    	bno055_interface_delay_ms(50);
     }
 }
 

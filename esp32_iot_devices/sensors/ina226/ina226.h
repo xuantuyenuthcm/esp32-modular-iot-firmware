@@ -56,6 +56,20 @@ uint8_t ina226_app_read(float *mV, float *mA, float *mW);
 uint8_t ina226_I2C_init(void);
 
 /**         
+ * @brief  Converse voltage to battery capacity percents
+ * @return battery percents
+ * @note   none
+ */
+float getBatteryPercentage(float voltage);
+
+/**         
+ * @brief  Print battery percents
+ * @param[in] voltage
+ * @note   none
+ */
+void ina226_print_battery_percents(float voltage);
+
+/**         
  * @brief  test if the app work
  * @return none
  * @note   none

@@ -227,6 +227,43 @@ uint8_t ina226_I2C_init(void) {
     return 0;
 }
 
+float getBatteryPercentage(float voltage) {
+    float percent = 0;
+    
+    if (voltage >= 4200) {
+        percent = 100;
+    }
+    else if (voltage >= 3850) {
+        percent = 50 + (voltage - 3850) * (50.0 / (4200 - 3850));
+    }
+    else if (voltage >= 3700) {
+        percent = 20 + (voltage - 3700) * (30.0 / (3850 - 3700));
+    }
+    else if (voltage >= 3300) {
+        percent = 5 + (voltage - 3300) * (15.0 / (3700 - 3300));
+    }
+    else if (voltage >= 3000) {
+        percent = 0 + (voltage - 3000) * (5.0 / (3300 - 3000));
+    }
+    else {
+        percent = 0;
+    }
+
+    return percent;
+}
+
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+
+#define PRINT_COLOR(color, format, ...)  printf(color format RESET "\n", ##__VA_ARGS__)
+
+void ina226_print_battery_percents(float voltage) {
+    PRINT_COLOR(GREEN, "Battery: %.2f%%", getBatteryPercentage(voltage));
+}
+
 /**         
  * @brief  test if the app work
  * @return none
@@ -242,10 +279,13 @@ void ina226_app_test(void *pvParameter) {
     while (1) {     
         ina226_app_read(&voltage, &current, &power);
         
-        printf("Voltage: %.2f\n", voltage);
-        printf("Current: %.2f\n", current);
-        printf("Power: %.2f\n", power);
+        printf("=================\n");
+        printf("Voltage: %.2fmV\n", voltage);
+        printf("Current: %.2fmA\n", current);
+        printf("Power: %.2fmW\n", power);
         
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        ina226_print_battery_percents(voltage);
+
+        vTaskDelay(pdMS_TO_TICKS(1500));
     }
 }

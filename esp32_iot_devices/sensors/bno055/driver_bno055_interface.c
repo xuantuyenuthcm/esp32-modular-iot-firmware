@@ -37,7 +37,7 @@
 #include "driver_bno055_interface.h"
 #include "i2c_manager.h"
 
-#define BNO055_ADDRESS  0x28
+#define BNO055_ADDRESS  0x29
 
 static i2c_master_dev_handle_t bno055_handle = NULL;
 

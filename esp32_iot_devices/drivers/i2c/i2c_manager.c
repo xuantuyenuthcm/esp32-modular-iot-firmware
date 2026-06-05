@@ -18,7 +18,7 @@ void i2c_init() {
         .flags.enable_internal_pullup = true,
     };
 
-        ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus_handle));
+    ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus_handle));        
 }
 
 static i2c_device_config_t i2c_get_dev_config(uint8_t dev_addr) {
