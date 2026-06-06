@@ -2,5 +2,5 @@ idf_component_register(SRCS "bme280.c" "driver_bme280_interface.c" "driver_bme28
                     INCLUDE_DIRS "."
                     REQUIRES
                     PRIV_REQUIRES
-                        i2c                        
+                        i2c_bus                       
 )

@@ -2,5 +2,5 @@ idf_component_register(SRCS "bh1750.c" "driver_bh1750fvi_interface.c" "driver_bh
                     INCLUDE_DIRS "."
                     REQUIRES
                     PRIV_REQUIRES
-                        i2c
+                        i2c_bus
 )

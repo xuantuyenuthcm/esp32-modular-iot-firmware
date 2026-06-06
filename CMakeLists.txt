@@ -3,16 +3,16 @@
 cmake_minimum_required(VERSION 3.22)
 
 set(EXTRA_COMPONENT_DIRS
-    esp32_iot_devices/drivers/i2c
-    esp32_iot_devices/sensors/bmp280
-    esp32_iot_devices/sensors/bme280
-    esp32_iot_devices/sensors/bh1750
-    esp32_iot_devices/sensors/ina226
-    esp32_iot_devices/sensors/aht20
-    esp32_iot_devices/sensors/bno055
-    esp32_iot_devices/sensors/sensors_manager
+    components/01_hal/i2c_bus
+    components/01_hal/sensor_drivers/bmp280
+    components/01_hal/sensor_drivers/bme280
+    components/01_hal/sensor_drivers/bh1750
+    components/01_hal/sensor_drivers/ina226
+    components/01_hal/sensor_drivers/aht20
+    components/01_hal/sensor_drivers/bno055
+    components/01_hal/sensor_drivers/sensors_manager
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-project(esp32-modular-iot-firmware)
+project(esp32-iot-firmware)

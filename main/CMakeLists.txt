@@ -3,7 +3,7 @@ idf_component_register(SRCS "main.c"
                     REQUIRES
                         esp_driver_i2c   
                     PRIV_REQUIRES
-                        i2c
+                        i2c_bus
                         bh1750
                         bme280
                         bmp280 

@@ -2,5 +2,5 @@ idf_component_register(SRCS "ina226.c" "driver_ina226_interface.c" "driver_ina22
                     INCLUDE_DIRS "."
                     REQUIRES
                     PRIV_REQUIRES
-                        i2c 
+                        i2c_bus
 )
