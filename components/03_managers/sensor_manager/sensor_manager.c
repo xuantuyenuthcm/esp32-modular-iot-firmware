@@ -112,6 +112,9 @@ void sensor_task(void *pvParameter) {
         if (xQueueSend(g_mqtt_publish_queue, &msg, 0) != pdTRUE) {
             ESP_LOGE("Sensor_task", "Publish queue full - data droped !");
         }
+        if (xQueueSend(g_ble_send_queue, &msg, 0) != pdTRUE) {
+            ESP_LOGE("Sensor_task", "BLE queue full - data droped !");
+        }
         vTaskDelay(pdMS_TO_TICKS(SENSOR_PROCESS_LOOP_MS));
     }
 }

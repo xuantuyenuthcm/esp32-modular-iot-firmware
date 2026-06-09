@@ -62,6 +62,7 @@ extern SemaphoreHandle_t  g_mqtt_ready_sem;
 extern QueueHandle_t      g_mqtt_publish_queue;
 extern QueueHandle_t      g_mqtt_subscribe_queue;
 extern QueueHandle_t      g_control_queue;
+extern QueueHandle_t      g_ble_send_queue;
 
 extern char g_ota_url[OTA_URL_MAX_LEN];
 extern char g_ota_version[OTA_VERSION_MAX_LEN];

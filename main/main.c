@@ -38,6 +38,9 @@ static esp_err_t rtos_resources_create(void)
 
     g_control_queue = xQueueCreate(10, sizeof(control_cmd_t));    
     if (g_control_queue == NULL) return ESP_ERR_NO_MEM;
+    
+    g_ble_send_queue = xQueueCreate(10, sizeof(mqtt_publish_msg_t));
+    if (g_ble_send_queue == NULL) return ESP_ERR_NO_MEM;
 
     ESP_LOGI(TAG, "RTOS resources created");
     return ESP_OK;
