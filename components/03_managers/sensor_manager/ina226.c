@@ -217,7 +217,7 @@ uint8_t ina226_app_deinit(void)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t ina226_I2C_init(void) {
+uint8_t ina226_full_init(void) {
     uint8_t res;
     res = ina226_app_init(0x40, 0.1);
     if (res != 0) {
@@ -270,7 +270,7 @@ void ina226_print_battery_percents(float voltage) {
  * @note   none
  */
 void ina226_app_test(void *pvParameter) {
-    ina226_I2C_init();
+    ina226_full_init();
 
     float voltage;
     float current;
@@ -288,4 +288,31 @@ void ina226_app_test(void *pvParameter) {
 
         vTaskDelay(pdMS_TO_TICKS(1500));
     }
+}
+
+/**         
+ * @brief  read voltage and converse it to battery percent
+ * @param[out] battery pointer to buffer
+ * @return 0 - OK
+ * @return 1 - Error
+ */
+uint8_t ina226_read_get_battery(float *battery) {
+    if (battery == NULL) {
+        return 1;
+    }
+
+    uint8_t res;
+    uint16_t u_raw;
+    float voltage;
+
+    /* read bus voltage */
+    res = ina226_read_bus_voltage(&gs_handle, &u_raw, &voltage);
+    if (res != 0)
+    {
+        return 1;
+    }
+
+    *battery = getBatteryPercentage(voltage);
+    
+    return 0;    
 }

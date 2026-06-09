@@ -122,7 +122,7 @@ void aht20_interface_debug_print(const char *const fmt, ...)
     va_list args;
     va_start(args, fmt);
 
-    esp_log_writev(ESP_LOG_INFO, "BME280", fmt, args);
+    esp_log_writev(ESP_LOG_ERROR, "BME280", fmt, args);
 
     va_end(args);
 }

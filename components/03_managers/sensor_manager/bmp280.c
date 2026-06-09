@@ -167,7 +167,7 @@ uint8_t bmp280_app_deinit(void)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t bmp280_I2C_init(void) {
+uint8_t bmp280_full_init(void) {
     uint8_t res;
     res = bmp280_app_init(BMP280_INTERFACE_IIC, 0x76);
     if (res != 0) {
@@ -183,7 +183,7 @@ uint8_t bmp280_I2C_init(void) {
  * @note   none
  */
 void bmp280_app_test(void *pvParameter) {
-    bmp280_I2C_init();
+    bmp280_full_init();
 
     float temperature;
     float pressure;

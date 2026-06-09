@@ -48,7 +48,7 @@ uint8_t bmp280_app_deinit(void);
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t bmp280_I2C_init(void);
+uint8_t bmp280_full_init(void);
 
 /**         
  * @brief  test if the app work

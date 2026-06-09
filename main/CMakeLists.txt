@@ -3,12 +3,8 @@ idf_component_register(SRCS "main.c"
                     REQUIRES
                         esp_driver_i2c   
                     PRIV_REQUIRES
-                        i2c_bus
-                        bh1750
-                        bme280
-                        bmp280 
-                        aht20   
-                        ina226
-                        bno055
-                        sensors_manager              
+                        sensor_manager
+                        mqtt_service
+                        wifi_service
+                        app_types
 )

@@ -1,4 +1,6 @@
 #include "i2c_manager.h"
+#include "esp_log.h"
+#include "freertos/FreeRTOS.h"
 
 const char *TAG_I2C = "I2C";
 
@@ -32,6 +34,15 @@ static i2c_device_config_t i2c_get_dev_config(uint8_t dev_addr) {
 }
 
 void i2c_add_device(uint8_t dev_addr, i2c_master_dev_handle_t *dev_handle) {
+    esp_err_t ret = i2c_master_probe(bus_handle, dev_addr, 100);
+
+    // Error handling: no device response, system keeps retrying until success
+    while (ret != ESP_OK) {
+        ESP_LOGE(TAG_I2C, "Can't find address 0x%02X, please check the wiring, trying to reconnect ...", dev_addr);
+        ret = i2c_master_probe(bus_handle, dev_addr, 100);
+        vTaskDelay(pdMS_TO_TICKS(1500));
+    }
+
     i2c_device_config_t dev_cfg = i2c_get_dev_config(dev_addr);
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, dev_handle));
 }

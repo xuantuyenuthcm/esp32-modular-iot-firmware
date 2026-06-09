@@ -6,21 +6,57 @@
 #include "ina226.h"
 #include "bno055.h"
 #include "i2c_scan.h"
+#include "mqtt_task.h"
+#include "wifi_task.h"
+#include "core_mqtt.h"
+#include "core_mqtt_config.h"
+#include "rtos_config.h"
+#include "sensor_manager.h"
 
-void test_app_main() {
-    i2c_init();
+static const char *TAG = "MAIN";
 
-    xTaskCreate(bno055_ndof_task, "bno055_test", 2048, NULL, 5, NULL);
+EventGroupHandle_t g_system_event_group     = NULL;
+SemaphoreHandle_t  g_mqtt_ready_sem         = NULL;
+QueueHandle_t      g_mqtt_publish_queue     = NULL;
+QueueHandle_t      g_mqtt_subscribe_queue   = NULL;
+QueueHandle_t      g_control_queue          = NULL;
+QueueHandle_t      g_sensor_queue           = NULL; 
 
-    // xTaskCreate(bh1750_app_test, "bh1750_test", 2048, NULL, 5, NULL);
-    // xTaskCreate(bmp280_app_test, "bmp280_test", 2048, NULL, 5, NULL);
-    // xTaskCreate(aht20_app_test, "aht20_test", 2048, NULL, 5, NULL);
-    // xTaskCreate(ina226_app_test, "ina226_test", 2048, NULL, 5, NULL);
-    
+static esp_err_t rtos_resources_create(void)
+{
+    g_system_event_group = xEventGroupCreate();
+    if (g_system_event_group == NULL) return ESP_ERR_NO_MEM;
+
+    g_mqtt_ready_sem = xSemaphoreCreateBinary();
+    if (g_mqtt_ready_sem == NULL) return ESP_ERR_NO_MEM;
+
+    g_mqtt_publish_queue = xQueueCreate(MQTT_PUBLISH_QUEUE_SIZE, sizeof(mqtt_publish_msg_t));
+    if (g_mqtt_publish_queue == NULL) return ESP_ERR_NO_MEM;
+
+    g_mqtt_subscribe_queue = xQueueCreate(MQTT_SUBSCRIBE_QUEUE_SIZE, sizeof(mqtt_subscribe_msg_t));
+    if (g_mqtt_subscribe_queue == NULL) return ESP_ERR_NO_MEM;
+
+    g_control_queue = xQueueCreate(10, sizeof(control_cmd_t));    
+    if (g_control_queue == NULL) return ESP_ERR_NO_MEM;
+
+    ESP_LOGI(TAG, "RTOS resources created");
+    return ESP_OK;
 }
 
 void app_main(void)
 {
-    // i2c_scan();
-    test_app_main();
+    esp_err_t ret = rtos_resources_create();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
+        return;
+    }
+
+    ret = wifi_start();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
+        return;
+    }
+
+    xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
+    xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
 }

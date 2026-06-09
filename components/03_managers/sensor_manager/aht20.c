@@ -7,7 +7,6 @@ static aht20_handle_t gs_handle;        /**< aht20 handle */
  * @return status code
  *         - 0 success
  *         - 1 init failed
- * @note   none
  */
 uint8_t aht20_full_init(void)
 {
@@ -36,18 +35,16 @@ uint8_t aht20_full_init(void)
 
 /**
  * @brief      basic example read
- * @param[out] *temperature pointer to a converted temperature buffer
- * @param[out] *humidity pointer to a converted humidity buffer
+ * @param[out] temperature pointer to a converted temperature buffer
+ * @param[out] humidity pointer to a converted humidity buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
- * @note       none
  */
-uint8_t aht20_app_read(float *temperature, uint8_t *humidity)
+uint8_t aht20_app_read_all(float *temperature, uint8_t *humidity)
 {
     uint32_t temperature_raw;
     uint32_t humidity_raw;
-    
     /* read temperature and humidity */
     if (aht20_read_temperature_humidity(&gs_handle, (uint32_t *)&temperature_raw, temperature, 
                                        (uint32_t *)&humidity_raw, humidity) != 0)
@@ -56,6 +53,25 @@ uint8_t aht20_app_read(float *temperature, uint8_t *humidity)
     }
     else
     {
+        return 0;
+    }
+}
+
+/**
+ * @brief      read humidity
+ * @param[out] humidity pointer to a converted humidity buffer
+ * @return     status code
+ *             - 0 success
+ *             - 1 read failed
+ */
+uint8_t aht20_app_read_hum(uint8_t *humidity)
+{
+    uint32_t humidity_raw;
+    /* read humidity */
+    if (aht20_read_humidity(&gs_handle, (uint32_t*)&humidity_raw, humidity) != 0) {
+        return 1;
+    }
+    else {
         return 0;
     }
 }
@@ -92,7 +108,7 @@ void aht20_app_test(void *pvParameter) {
     uint8_t humidity;
 
     while(1) {
-        if (aht20_app_read(&temperature, &humidity) == 0) {
+        if (aht20_app_read_all(&temperature, &humidity) == 0) {
             // printf("aht20: Temperature: %.2f\n", temperature);
             printf("aht20: Humidity: %d %%\n", humidity);
         } else {

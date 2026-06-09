@@ -10,7 +10,7 @@ static bh1750fvi_handle_t gs_handle;
  *            - 1 init failed
  * @note      none
  */
-uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
+uint8_t bh1750fvi_full_init() {
     uint8_t res;
     
     /* link interface function */
@@ -23,7 +23,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
     DRIVER_BH1750FVI_LINK_DEBUG_PRINT(&gs_handle, bh1750fvi_interface_debug_print);
 
     /* set the addr pin */
-    res = bh1750fvi_set_addr_pin(&gs_handle, addr_pin);
+    res = bh1750fvi_set_addr_pin(&gs_handle, BH1750FVI_ADDRESS_LOW);
     if (res != 0)
     {
         bh1750fvi_interface_debug_print("bh1750fvi: set addr pin failed.\n");
@@ -85,7 +85,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
 
 /**
  * @brief      basic example read
- * @param[out] *lux pointer to a converted lux buffer
+ * @param[out] lux pointer to a converted lux buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
@@ -142,13 +142,13 @@ uint8_t bh1750fvi_basic_deinit(void)
  * @note   none
  */
 void bh1750_app_test(void *pvParameter) {
-    bh1750fvi_basic_init(BH1750FVI_ADDRESS_LOW);
+    bh1750fvi_full_init();
 
     float lux = 0.0f;
 
     while(1) {
         if (bh1750fvi_basic_read(&lux) == 0) {
-            printf("Anh sang hien tai: %.2f Lux\n", lux);
+            printf("Lightness: %.2f Lux\n", lux);
         } else {
             printf("Doc du lieu BH1750 that bai!\n");
         }

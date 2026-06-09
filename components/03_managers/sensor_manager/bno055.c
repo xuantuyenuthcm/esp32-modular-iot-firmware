@@ -1,8 +1,10 @@
 #include "bno055.h"
 #include "esp_log.h"
+#include "math.h"
+
 static const char *TAG = "bno055";
 
-void bno055_I2C_init() {
+void bno055_full_init() {
     bno055_interface_iic_init();
     uint8_t data = OPERATION_MODE_CONFIG;
     esp_err_t err = bno055_interface_iic_write(0x28, BNO055_OPR_MODE_ADDR, &data, 1);
@@ -44,7 +46,7 @@ void bno055_print_app_id() {
 }
 
 void bno055_ndof_task(void *pvParameters) {
-    bno055_I2C_init();
+    bno055_full_init();
     
     esp_err_t err;
     bno055_quaternion_t quat;
@@ -64,6 +66,26 @@ void bno055_ndof_task(void *pvParameters) {
         printf("\033[H");
     	bno055_interface_delay_ms(50);
     }
+}
+
+uint8_t bno055_accel_read(float *accel) {
+    esp_err_t err;
+
+    bno055_quaternion_t quat;
+    bno055_vec3_t lin_accel;
+    bno055_vec3_t gravity;
+
+    err = bno055_get_fusion_data(0, &quat, &lin_accel, &gravity);
+    if( err != ESP_OK ) {
+        printf("bno055_get_fusion_data() returned error: %02x \n", err);
+        return 1;
+    }
+
+    *accel = (float)sqrt(lin_accel.x * lin_accel.x +
+                    lin_accel.y * lin_accel.y +
+                    lin_accel.z * lin_accel.z);
+
+    return 0;
 }
 
 

@@ -42,3 +42,12 @@ uint8_t aht20_app_read(float *temperature, uint8_t *humidity);
  * @note   none
  */
 void aht20_app_test(void *pvParameter);
+
+/**
+ * @brief      read humidity
+ * @param[out] humidity pointer to a converted humidity buffer
+ * @return     status code
+ *             - 0 success
+ *             - 1 read failed
+ */
+uint8_t aht20_app_read_hum(uint8_t *humidity);
