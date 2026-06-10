@@ -17,7 +17,7 @@
  *            - 1 init failed
  * @note      none
  */
-uint8_t bh1750fvi_full_init();
+esp_err_t bh1750fvi_full_init();
 
 /**
  * @brief      basic example read

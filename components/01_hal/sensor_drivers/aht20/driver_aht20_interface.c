@@ -35,7 +35,7 @@
  */
 
 #include "driver_aht20_interface.h"
-#include "i2c_manager.h"
+#include "sensor_manager.h"
 
 #define AHT20_ADDRESS      0x38
 
@@ -50,11 +50,15 @@ static i2c_master_dev_handle_t aht20_handle = NULL;
  */
 uint8_t aht20_interface_iic_init(void)
 {
-    i2c_add_device(AHT20_ADDRESS, &aht20_handle);
+    sensor_state_t sensor_state_tmp;
+    sensor_state_tmp = i2c_add_device(AHT20_ADDRESS, &aht20_handle);
+    sensor_state[SENSOR_AHT20].addr = sensor_state_tmp.addr;
+    sensor_state[SENSOR_AHT20].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "AHT20 sensor added to I2C bus!");
 
     return 0;
 }
+
 
 /**
  * @brief  interface iic bus deinit

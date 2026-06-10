@@ -5,7 +5,7 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
-#include "rtos_config.h"
+#include "app_types.h"
 #include "mqtt_task.h"
 #include "wifi_task.h"
 

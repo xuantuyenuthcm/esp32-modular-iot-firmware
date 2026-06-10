@@ -57,6 +57,13 @@ typedef struct {
     float battery;          // INA226
 } sensor_data_t;
 
+typedef struct {
+    char *device;
+    uint8_t addr;
+    bool i2c_init_flag;
+    bool sensor_init_flag;
+}sensor_state_t;
+
 extern EventGroupHandle_t g_system_event_group;
 extern SemaphoreHandle_t  g_mqtt_ready_sem;
 extern QueueHandle_t      g_mqtt_publish_queue;

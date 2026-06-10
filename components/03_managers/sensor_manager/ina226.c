@@ -47,7 +47,7 @@ static ina226_handle_t gs_handle;        /**< ina226 handle */
  *            - 1 init failed
  * @note      none
  */
-uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
+esp_err_t ina226_app_init(ina226_address_t addr_pin, double r)
 {
     uint8_t res;
     uint16_t calibration;
@@ -68,7 +68,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
     {
         ina226_interface_debug_print("ina226: set addr pin failed.\n");
        
-        return 1;
+        return ESP_FAIL;
     }
 
     /* set the r */
@@ -77,7 +77,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
     {
         ina226_interface_debug_print("ina226: set resistance failed.\n");
        
-        return 1;
+        return ESP_FAIL;
     }
     
     /* init */
@@ -86,7 +86,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
     {
         ina226_interface_debug_print("ina226: init failed.\n");
        
-        return 1;
+        return ESP_FAIL;
     }
     
     /* set default average mode */
@@ -96,7 +96,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: set average mode failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     
     /* set default bus voltage conversion time */
@@ -106,7 +106,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: set bus voltage conversion time failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     
     /* set default shunt voltage conversion time */
@@ -116,7 +116,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: set shunt voltage conversion time failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     
     /* calculate calibration */
@@ -126,7 +126,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: calculate calibration failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     res = ina226_set_calibration(&gs_handle, calibration);
     if (res != 0)
@@ -134,7 +134,7 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: set calibration failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     
     /* set shunt bus voltage continuous */
@@ -144,10 +144,10 @@ uint8_t ina226_app_init(ina226_address_t addr_pin, double r)
         ina226_interface_debug_print("ina226: set mode failed.\n");
         (void)ina226_deinit(&gs_handle);
         
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**
@@ -170,24 +170,24 @@ uint8_t ina226_app_read(float *mV, float *mA, float *mW)
     res = ina226_read_bus_voltage(&gs_handle, (uint16_t *)&u_raw, mV);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
     /* read current */
     res = ina226_read_current(&gs_handle, (int16_t *)&s_raw, mA);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
     /* read power */
     res = ina226_read_power(&gs_handle, (uint16_t *)&u_raw, mW);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**
@@ -204,10 +204,10 @@ uint8_t ina226_app_deinit(void)
     res = ina226_deinit(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**         
@@ -217,14 +217,14 @@ uint8_t ina226_app_deinit(void)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t ina226_full_init(void) {
+esp_err_t ina226_full_init(void) {
     uint8_t res;
     res = ina226_app_init(0x40, 0.1);
     if (res != 0) {
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 float getBatteryPercentage(float voltage) {
@@ -293,12 +293,12 @@ void ina226_app_test(void *pvParameter) {
 /**         
  * @brief  read voltage and converse it to battery percent
  * @param[out] battery pointer to buffer
- * @return 0 - OK
- * @return 1 - Error
+ * @return ESP_OK - OK
+ * @return ESP_FAIL - Error
  */
 uint8_t ina226_read_get_battery(float *battery) {
     if (battery == NULL) {
-        return 1;
+        return ESP_FAIL;
     }
 
     uint8_t res;
@@ -309,10 +309,10 @@ uint8_t ina226_read_get_battery(float *battery) {
     res = ina226_read_bus_voltage(&gs_handle, &u_raw, &voltage);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
 
     *battery = getBatteryPercentage(voltage);
     
-    return 0;    
+    return ESP_OK;    
 }

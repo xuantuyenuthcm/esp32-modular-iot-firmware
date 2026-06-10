@@ -35,12 +35,11 @@
  */
 
 #include "driver_bmp280_interface.h"
-#include "i2c_manager.h"
+#include "sensor_manager.h"
 
 #define BMP280_ADDRESS      0x76
 
 static i2c_master_dev_handle_t bmp280_handle = NULL;
-
 
 /**
  * @brief  interface iic bus init
@@ -51,7 +50,10 @@ static i2c_master_dev_handle_t bmp280_handle = NULL;
  */
 uint8_t bmp280_interface_iic_init(void)
 {
-    i2c_add_device(BMP280_ADDRESS, &bmp280_handle);
+    sensor_state_t sensor_state_tmp;
+    sensor_state_tmp = i2c_add_device(BMP280_ADDRESS, &bmp280_handle);
+    sensor_state[SENSOR_BMP280].addr = sensor_state_tmp.addr;
+    sensor_state[SENSOR_BMP280].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "BMP280 sensor added to I2C bus!");
 
     return 0;

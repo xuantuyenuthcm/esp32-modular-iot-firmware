@@ -33,18 +33,23 @@ static i2c_device_config_t i2c_get_dev_config(uint8_t dev_addr) {
     return dev_cfg;
 }
 
-void i2c_add_device(uint8_t dev_addr, i2c_master_dev_handle_t *dev_handle) {
-    esp_err_t ret = i2c_master_probe(bus_handle, dev_addr, 100);
-
+sensor_state_t i2c_add_device(uint8_t dev_addr, i2c_master_dev_handle_t *dev_handle) {
+    esp_err_t ret;
+    sensor_state_t sensor_state = {0};
     // Error handling: no device response, system keeps retrying until success
-    while (ret != ESP_OK) {
-        ESP_LOGE(TAG_I2C, "Can't find address 0x%02X, please check the wiring, trying to reconnect ...", dev_addr);
-        ret = i2c_master_probe(bus_handle, dev_addr, 100);
-        vTaskDelay(pdMS_TO_TICKS(1500));
+    if ((ret = i2c_master_probe(bus_handle, dev_addr, 100)) != ESP_OK) {
+        ESP_LOGE(TAG_I2C, "%s Can't find address 0x%02X, please check the wiring...", i2c_addr_to_name(dev_addr) ,dev_addr);
+        sensor_state.i2c_init_flag = false;
+        sensor_state.addr = dev_addr;
+        return sensor_state;
     }
 
     i2c_device_config_t dev_cfg = i2c_get_dev_config(dev_addr);
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, dev_handle));
+    sensor_state.i2c_init_flag = true;
+    sensor_state.addr = dev_addr;
+
+    return sensor_state;
 }
 
 esp_err_t i2c_write_sensor(i2c_master_dev_handle_t dev_handle, uint8_t* buf, uint16_t len) {
@@ -62,4 +67,8 @@ esp_err_t i2c_write_read_sensor(i2c_master_dev_handle_t dev_handle,
                             uint8_t* buf_read, uint16_t len) {
 
     return i2c_master_transmit_receive(dev_handle, buf_write, write_len, buf_read, len, 500);
+}
+
+i2c_master_bus_handle_t i2c_get_bus_handle() {
+    return bus_handle;
 }

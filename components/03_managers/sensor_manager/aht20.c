@@ -8,7 +8,7 @@ static aht20_handle_t gs_handle;        /**< aht20 handle */
  *         - 0 success
  *         - 1 init failed
  */
-uint8_t aht20_full_init(void)
+esp_err_t aht20_full_init(void)
 {
     uint8_t res;
     
@@ -27,10 +27,10 @@ uint8_t aht20_full_init(void)
     {
         aht20_interface_debug_print("aht20: init failed.\n");
         
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**
@@ -49,11 +49,11 @@ uint8_t aht20_app_read_all(float *temperature, uint8_t *humidity)
     if (aht20_read_temperature_humidity(&gs_handle, (uint32_t *)&temperature_raw, temperature, 
                                        (uint32_t *)&humidity_raw, humidity) != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     else
     {
-        return 0;
+        return ESP_OK;
     }
 }
 
@@ -69,10 +69,10 @@ uint8_t aht20_app_read_hum(uint8_t *humidity)
     uint32_t humidity_raw;
     /* read humidity */
     if (aht20_read_humidity(&gs_handle, (uint32_t*)&humidity_raw, humidity) != 0) {
-        return 1;
+        return ESP_FAIL;
     }
     else {
-        return 0;
+        return ESP_OK;
     }
 }
 
@@ -88,11 +88,11 @@ uint8_t aht20_app_deinit(void)
     /* deinit aht20 and close bus */
     if (aht20_deinit(&gs_handle) != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     else
     {
-        return 0;
+        return ESP_OK;
     }
 }
 

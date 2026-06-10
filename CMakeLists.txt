@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.22)
 
 set(EXTRA_COMPONENT_DIRS
     components/00_core/app_types
+    components/00_core/app_errors
     components/01_hal/i2c_bus
     components/01_hal/sensor_drivers/bmp280
     components/01_hal/sensor_drivers/bme280
@@ -14,7 +15,14 @@ set(EXTRA_COMPONENT_DIRS
     components/02_services/mqtt_service
     components/02_services/wifi_service
     components/03_managers/sensor_manager
+
+    test/sensors/aht20_test
+    test/sensors/bh1750_test
+    test/sensors/bmp280_test
+    test/sensors/bno055_test
+    test/sensors/ina226_test
 )
+
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 

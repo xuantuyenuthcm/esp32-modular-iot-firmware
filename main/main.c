@@ -10,8 +10,15 @@
 #include "wifi_task.h"
 #include "core_mqtt.h"
 #include "core_mqtt_config.h"
-#include "rtos_config.h"
+#include "app_types.h"
 #include "sensor_manager.h"
+#include "driver_aht20_read_test.h"
+#include "driver_bh1750fvi_read_test.h"
+#include "driver_bmp280_read_test.h"
+#include "driver_bmp280_register_test.h"
+#include "driver_ina226_alert_test.h"
+#include "driver_ina226_read_test.h"
+#include "driver_ina226_register_test.h"
 
 static const char *TAG = "MAIN";
 
@@ -20,7 +27,8 @@ SemaphoreHandle_t  g_mqtt_ready_sem         = NULL;
 QueueHandle_t      g_mqtt_publish_queue     = NULL;
 QueueHandle_t      g_mqtt_subscribe_queue   = NULL;
 QueueHandle_t      g_control_queue          = NULL;
-QueueHandle_t      g_sensor_queue           = NULL; 
+QueueHandle_t      g_sensor_queue           = NULL;
+QueueHandle_t      g_ble_send_queue         = NULL; 
 
 static esp_err_t rtos_resources_create(void)
 {
@@ -48,18 +56,20 @@ static esp_err_t rtos_resources_create(void)
 
 void app_main(void)
 {
-    esp_err_t ret = rtos_resources_create();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
-        return;
-    }
+    // esp_err_t ret = rtos_resources_create();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
+    //     return;
+    // }
 
-    ret = wifi_start();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
-        return;
-    }
+    // ret = wifi_start();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
+    //     return;
+    // }
 
-    xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
-    xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
+    // xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
+    // xEventGroupWaitBits(g_system_event_group, EVT_MQTT_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);
+
+    // xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
 }

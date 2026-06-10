@@ -1,6 +1,6 @@
 #include "wifi_task.h"
 #include "wifi_config.h"
-#include "rtos_config.h"
+#include "app_types.h"
 
 #include <stdbool.h>
 #include <string.h>

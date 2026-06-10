@@ -35,7 +35,7 @@
  */
 
 #include "driver_bno055_interface.h"
-#include "i2c_manager.h"
+#include "sensor_manager.h"
 
 #define BNO055_ADDRESS  0x29
 
@@ -50,7 +50,10 @@ static i2c_master_dev_handle_t bno055_handle = NULL;
  */
 uint8_t bno055_interface_iic_init(void)
 {
-    i2c_add_device(BNO055_ADDRESS, &bno055_handle);
+    sensor_state_t sensor_state_tmp;
+    sensor_state_tmp = i2c_add_device(BNO055_ADDRESS, &bno055_handle);
+    sensor_state[SENSOR_BNO055].addr = sensor_state_tmp.addr;
+    sensor_state[SENSOR_BNO055].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "BNO055 sensor added to I2C bus!");
     
     return 0;

@@ -1,5 +1,5 @@
 #include "mqtt_task.h"
-#include "rtos_config.h"
+#include "app_types.h"
 #include "core_mqtt.h"
 #include "string.h"
 #include <errno.h>

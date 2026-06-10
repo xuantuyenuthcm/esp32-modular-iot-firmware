@@ -10,7 +10,7 @@ static bh1750fvi_handle_t gs_handle;
  *            - 1 init failed
  * @note      none
  */
-uint8_t bh1750fvi_full_init() {
+esp_err_t bh1750fvi_full_init() {
     uint8_t res;
     
     /* link interface function */
@@ -28,7 +28,7 @@ uint8_t bh1750fvi_full_init() {
     {
         bh1750fvi_interface_debug_print("bh1750fvi: set addr pin failed.\n");
        
-        return 1;
+        return ESP_FAIL;
     }
 
     /* init */
@@ -37,7 +37,7 @@ uint8_t bh1750fvi_full_init() {
     {
         bh1750fvi_interface_debug_print("bh1750fvi: init failed.\n");
        
-        return 1;
+        return ESP_FAIL;
     }
 
     /* power on */
@@ -47,7 +47,7 @@ uint8_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: power on failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return ESP_FAIL;
     }
     
     /* set mode */
@@ -57,7 +57,7 @@ uint8_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: set mode failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return ESP_FAIL;
     }
 
     /* set measurement time */
@@ -67,7 +67,7 @@ uint8_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: set measurement time failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return ESP_FAIL;
     }
     
     /* start continuous read */
@@ -77,10 +77,10 @@ uint8_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: start continuous read failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**
@@ -100,11 +100,11 @@ uint8_t bh1750fvi_basic_read(float *lux)
     res = bh1750fvi_continuous_read(&gs_handle, &raw, lux);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     else
     {
-        return 0;
+        return ESP_OK;
     }
 }
 
@@ -123,17 +123,17 @@ uint8_t bh1750fvi_basic_deinit(void)
     res = bh1750fvi_stop_continuous_read(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
     /* deinit */
     res = bh1750fvi_deinit(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return ESP_FAIL;
     }
     
-    return 0;
+    return ESP_OK;
 }
 
 /**         

@@ -14,7 +14,7 @@
  *         - 1 init failed
  * @note   none
  */
-uint8_t aht20_full_init(void);
+esp_err_t aht20_full_init(void);
 
 /**
  * @brief  basic example deinit

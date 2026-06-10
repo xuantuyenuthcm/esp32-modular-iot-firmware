@@ -50,7 +50,10 @@ static i2c_master_dev_handle_t bh1750_handle = NULL;
  */
 uint8_t bh1750fvi_interface_iic_init(void)
 {
-    i2c_add_device(BH1750FVI_ADDRESS, &bh1750_handle);
+    sensor_state_t sensor_state_tmp;
+    sensor_state_tmp = i2c_add_device(BH1750FVI_ADDRESS, &bh1750_handle);
+    sensor_state[SENSOR_BH1750].addr = sensor_state_tmp.addr;
+    sensor_state[SENSOR_BH1750].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "BH1750 sensor added to I2C bus!");
     
     return 0;

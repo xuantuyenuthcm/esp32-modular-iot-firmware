@@ -35,7 +35,7 @@
  */
 
 #include "driver_ina226_interface.h"
-#include "i2c_manager.h"
+#include "sensor_manager.h"
 
 #define INA226_ADDRESS  0x40
 
@@ -51,7 +51,10 @@ static i2c_master_dev_handle_t ina226_handle = NULL;
  */
 uint8_t ina226_interface_iic_init(void)
 {
-    i2c_add_device(INA226_ADDRESS, &ina226_handle);
+    sensor_state_t sensor_state_tmp;
+    sensor_state_tmp = i2c_add_device(INA226_ADDRESS, &ina226_handle);
+    sensor_state[SENSOR_INA226].addr = sensor_state_tmp.addr;
+    sensor_state[SENSOR_INA226].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "INA226 sensor added to I2C bus!");
 
     return 0;
