@@ -3,12 +3,35 @@
 
 typedef enum {
     SENSOR_OK,
-    SENSOR_FAIL,
+
+    SENSOR_BUS_ERR,
+    SENSOR_HARDWARE_ERR,
+
+    SENSOR_READ_FAIL,
+    SENSOR_WRITE_FAIL,
+    SENSOR_READ_OR_WRITE_FAIL,
+    SENSOR_READ_NO_DATA,
+    SENSOR_CRC_FAIL,       
+    SENSOR_RESET_FAIL,       
+    SENSOR_READ_CALI_FAIL,
+    SENSOR_GET_NVM_CALI_FAIL,       
+    SENSOR_POWER_CONFIG_FAIL,
+    SENSOR_COMPENSATE_PARAM_FAIL,
+
+    SENSOR_SET_FAIL,
+    SENSOR_SHUT_FAIL,
+
+    SENSOR_ID_ERR,
+    SENSOR_MATH_ERR,       
+    
     SENSOR_HANDLE_NULL,
-    SENSOR_NOT_INITIALIZE,
-    SENSOR_FUNC_FAIL,       // read data fail, mode invalid, power on/down fail, compensate param fail, id error, math error
-    SENSOR_SYS_ERR,         // reset fail, crc fail, read timeout, get nvm calibration failed
-    SENSOR_READ_CALI_FAIL   // read calibration failed
+    SENSOR_LINKED_FUNC_NULL,
+    SENSOR_INVALID_PARAM,  
+    SENSOR_HANDLE_NOT_INIT,
+    
+    SENSOR_NO_FUNC,  
+
+    SENSOR_READ_TIMEOUT,       
 }sensor_error_t;
 
 #endif

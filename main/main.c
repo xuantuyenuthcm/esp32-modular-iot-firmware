@@ -12,13 +12,9 @@
 #include "core_mqtt_config.h"
 #include "app_types.h"
 #include "sensor_manager.h"
-#include "driver_aht20_read_test.h"
-#include "driver_bh1750fvi_read_test.h"
-#include "driver_bmp280_read_test.h"
-#include "driver_bmp280_register_test.h"
-#include "driver_ina226_alert_test.h"
-#include "driver_ina226_read_test.h"
-#include "driver_ina226_register_test.h"
+#include "nvs_manager.h"
+#include "ble_manager.h"
+#include "ble_gatts_svc.h"
 
 static const char *TAG = "MAIN";
 
@@ -56,20 +52,28 @@ static esp_err_t rtos_resources_create(void)
 
 void app_main(void)
 {
-    // esp_err_t ret = rtos_resources_create();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
-    //     return;
-    // }
+    ESP_LOGI(TAG, "System init");
+    nvs_manager_init();
 
-    // ret = wifi_start();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
-    //     return;
-    // }
+    ble_manager_init();
+    gatt_svc_init();
+    ble_manager_start();
 
-    // xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
-    // xEventGroupWaitBits(g_system_event_group, EVT_MQTT_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);
+    esp_err_t ret = rtos_resources_create();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
+        return;
+    }
 
-    // xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
+    ret = wifi_start();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
+        return;
+    }
+
+    xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
+    xEventGroupWaitBits(g_system_event_group, EVT_MQTT_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);
+
+    xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
+
 }

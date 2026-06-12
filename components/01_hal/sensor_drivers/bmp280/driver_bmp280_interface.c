@@ -56,7 +56,7 @@ uint8_t bmp280_interface_iic_init(void)
     sensor_state[SENSOR_BMP280].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "BMP280 sensor added to I2C bus!");
 
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -68,7 +68,7 @@ uint8_t bmp280_interface_iic_init(void)
  */
 uint8_t bmp280_interface_iic_deinit(void)
 {   
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -87,7 +87,7 @@ uint8_t bmp280_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint1
     uint8_t reg_addr = reg;
     esp_err_t err = i2c_write_read_sensor(bmp280_handle, &reg_addr, 1, buf, len);
 
-    return (err == ESP_OK) ? 0 : 1;
+    return (err == SENSOR_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**
@@ -112,7 +112,7 @@ uint8_t bmp280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
 
     esp_err_t err = i2c_write_sensor(bmp280_handle, write_buf, len + 1);
 
-    return (err == ESP_OK) ? 0 : 1;
+    return (err == SENSOR_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**
@@ -124,7 +124,7 @@ uint8_t bmp280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
  */
 uint8_t bmp280_interface_spi_init(void)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -136,7 +136,7 @@ uint8_t bmp280_interface_spi_init(void)
  */
 uint8_t bmp280_interface_spi_deinit(void)
 {   
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -151,7 +151,7 @@ uint8_t bmp280_interface_spi_deinit(void)
  */
 uint8_t bmp280_interface_spi_read(uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -166,7 +166,7 @@ uint8_t bmp280_interface_spi_read(uint8_t reg, uint8_t *buf, uint16_t len)
  */
 uint8_t bmp280_interface_spi_write(uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**

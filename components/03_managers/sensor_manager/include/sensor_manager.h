@@ -2,6 +2,7 @@
 #define SENSOR_MANAGER_H
 
 #include "i2c_manager.h"
+#include "sensor_error.h"
 
 #define SENSOR_PROCESS_LOOP_MS    5000
 
@@ -21,7 +22,6 @@ typedef enum {
 } sensor_id_t;
 
 extern sensor_state_t sensor_state[SENSOR_MAX];
-
 
 void sensor_init();
 void sensor_get_data_json_packet(char *buffer, int buffer_size);

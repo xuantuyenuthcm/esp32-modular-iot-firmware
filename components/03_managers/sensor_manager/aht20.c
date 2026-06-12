@@ -27,10 +27,10 @@ esp_err_t aht20_full_init(void)
     {
         aht20_interface_debug_print("aht20: init failed.\n");
         
-        return ESP_FAIL;
+        return SENSOR_BUS_ERR;
     }
     
-    return ESP_OK;
+    return SENSOR_OK;
 }
 
 /**
@@ -49,11 +49,11 @@ uint8_t aht20_app_read_all(float *temperature, uint8_t *humidity)
     if (aht20_read_temperature_humidity(&gs_handle, (uint32_t *)&temperature_raw, temperature, 
                                        (uint32_t *)&humidity_raw, humidity) != 0)
     {
-        return ESP_FAIL;
+        return SENSOR_READ_FAIL;
     }
     else
     {
-        return ESP_OK;
+        return SENSOR_OK;
     }
 }
 
@@ -69,10 +69,10 @@ uint8_t aht20_app_read_hum(uint8_t *humidity)
     uint32_t humidity_raw;
     /* read humidity */
     if (aht20_read_humidity(&gs_handle, (uint32_t*)&humidity_raw, humidity) != 0) {
-        return ESP_FAIL;
+        return SENSOR_READ_FAIL;
     }
     else {
-        return ESP_OK;
+        return SENSOR_OK;
     }
 }
 
@@ -80,7 +80,6 @@ uint8_t aht20_app_read_hum(uint8_t *humidity)
  * @brief  basic example deinit
  * @return status code
  *         - 0 success
- *         - 1 deinit failed
  * @note   none
  */
 uint8_t aht20_app_deinit(void)
@@ -88,11 +87,11 @@ uint8_t aht20_app_deinit(void)
     /* deinit aht20 and close bus */
     if (aht20_deinit(&gs_handle) != 0)
     {
-        return ESP_FAIL;
+        return SENSOR_NO_FUNC;
     }
     else
     {
-        return ESP_OK;
+        return SENSOR_OK;
     }
 }
 

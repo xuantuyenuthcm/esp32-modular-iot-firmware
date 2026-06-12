@@ -28,7 +28,7 @@ esp_err_t bh1750fvi_full_init() {
     {
         bh1750fvi_interface_debug_print("bh1750fvi: set addr pin failed.\n");
        
-        return ESP_FAIL;
+        return SENSOR_WRITE_FAIL;
     }
 
     /* init */
@@ -37,7 +37,7 @@ esp_err_t bh1750fvi_full_init() {
     {
         bh1750fvi_interface_debug_print("bh1750fvi: init failed.\n");
        
-        return ESP_FAIL;
+        return SENSOR_HARDWARE_ERR;
     }
 
     /* power on */
@@ -47,7 +47,7 @@ esp_err_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: power on failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return ESP_FAIL;
+        return SENSOR_POWER_CONFIG_FAIL;
     }
     
     /* set mode */
@@ -57,7 +57,7 @@ esp_err_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: set mode failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return ESP_FAIL;
+        return SENSOR_SET_FAIL;
     }
 
     /* set measurement time */
@@ -67,7 +67,7 @@ esp_err_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: set measurement time failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return ESP_FAIL;
+        return SENSOR_SET_FAIL;
     }
     
     /* start continuous read */
@@ -77,10 +77,10 @@ esp_err_t bh1750fvi_full_init() {
         bh1750fvi_interface_debug_print("bh1750fvi: start continuous read failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return ESP_FAIL;
+        return SENSOR_SET_FAIL;
     }
     
-    return ESP_OK;
+    return SENSOR_OK;
 }
 
 /**
@@ -100,11 +100,11 @@ uint8_t bh1750fvi_basic_read(float *lux)
     res = bh1750fvi_continuous_read(&gs_handle, &raw, lux);
     if (res != 0)
     {
-        return ESP_FAIL;
+        return SENSOR_READ_FAIL;
     }
     else
     {
-        return ESP_OK;
+        return SENSOR_OK;
     }
 }
 
@@ -123,17 +123,17 @@ uint8_t bh1750fvi_basic_deinit(void)
     res = bh1750fvi_stop_continuous_read(&gs_handle);
     if (res != 0)
     {
-        return ESP_FAIL;
+        return SENSOR_SHUT_FAIL;
     }
     
     /* deinit */
     res = bh1750fvi_deinit(&gs_handle);
     if (res != 0)
     {
-        return ESP_FAIL;
+        return SENSOR_NO_FUNC;
     }
     
-    return ESP_OK;
+    return SENSOR_OK;
 }
 
 /**         

@@ -10,14 +10,8 @@
 #define TOPIC_CMD     "devices/" AWS_DEVICE_ID "/ota/command"
 #define TOPIC_OTA_CMD "devices/" AWS_DEVICE_ID "/ota/status"
 
-typedef enum {
-    SENSOR_NO_ERR,
-    SENSOR_BUS_ERR,
-    SENSOR_HARDWARE_ERR,
-} sensor_err_t;
-
 static const char* TAG = "sensor_manager";
-static uint8_t error_trigger_flag = SENSOR_NO_ERR;
+static uint8_t error_trigger_flag = SENSOR_OK;
 
 sensor_state_t sensor_state[SENSOR_MAX] = {
     {"aht20",  0, false, false},
@@ -75,8 +69,6 @@ static void sensor_json(char *buffer, uint8_t buffer_size, sensor_data_t sensor_
 
 // Initialize all sensors
 void sensor_init() {
-    esp_err_t ret;
-
     for (int i = 0; i< SENSOR_MAX; i++) {
         if (sensor_init_table[i]() == ESP_OK) {
             sensor_state[i].sensor_init_flag = true;
@@ -101,13 +93,12 @@ void sensor_eror_check_and_set_flag(uint8_t dev_addr, sensor_id_t dev_id) {
         error_trigger_flag = SENSOR_HARDWARE_ERR;
     }
 }
-
 // Find and fix which sensor cause the bus error
 void sensor_find_error_and_fix_small() {
     for (int i = 0; i < SENSOR_MAX; i++) {
         if (sensor_state[i].i2c_init_flag == false) {
             sensor_i2c_bus_init_table[i]();
-            error_trigger_flag = SENSOR_NO_ERR;
+            error_trigger_flag = SENSOR_OK;
         }
     }
 }
@@ -117,7 +108,7 @@ void sensor_find_error_and_fix_all() {
     for (int i = 0; i < SENSOR_MAX; i++) {
         if (sensor_state[i].sensor_init_flag == false) {
             sensor_init_table[i]();
-            error_trigger_flag = SENSOR_NO_ERR;
+            error_trigger_flag = SENSOR_OK;
         }
     }
 }

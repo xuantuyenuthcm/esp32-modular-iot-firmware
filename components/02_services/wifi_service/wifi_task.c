@@ -10,7 +10,7 @@
 #include "esp_netif.h"
 #include "esp_timer.h"
 #include "esp_wifi.h"
-#include "nvs_flash.h"
+#include "nvs_manager.h"
 
 static const char *TAG = "WIFI_TASK";
 
@@ -126,29 +126,9 @@ static void wifi_event_handler(void *arg,
     }
 }
 
-static esp_err_t wifi_init_nvs(void)
-{
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    return ret;
-}
-
 esp_err_t wifi_start(void)
 {
-    if (strcmp(WIFI_SSID, "YOUR_WIFI_SSID") == 0) {
-        ESP_LOGE(TAG, "Please update wifi_config.h");
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    esp_err_t ret = wifi_init_nvs();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "NVS init failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
+    esp_err_t ret;
     ret = esp_netif_init();
     if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) {
         ESP_LOGE(TAG, "Netif init failed: %s", esp_err_to_name(ret));
@@ -194,8 +174,8 @@ esp_err_t wifi_start(void)
     }
 
     wifi_config_t wifi_config = {0};
-    strncpy((char *)wifi_config.sta.ssid, WIFI_SSID, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char *)wifi_config.sta.password, WIFI_PASSWORD, sizeof(wifi_config.sta.password) - 1);
+    strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
+    strncpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
 
     ret = esp_wifi_set_mode(WIFI_MODE_STA);
     if (ret != ESP_OK) {

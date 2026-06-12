@@ -56,7 +56,7 @@ uint8_t aht20_interface_iic_init(void)
     sensor_state[SENSOR_AHT20].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
     ESP_LOGI(TAG_I2C, "AHT20 sensor added to I2C bus!");
 
-    return 0;
+    return SENSOR_OK;
 }
 
 
@@ -69,7 +69,7 @@ uint8_t aht20_interface_iic_init(void)
  */
 uint8_t aht20_interface_iic_deinit(void)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -86,7 +86,7 @@ uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
     esp_err_t err = i2c_read_sensor(aht20_handle, buf, len);
 
-    return (err == ESP_OK) ? 0 : 1;
+    return (err == ESP_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**
@@ -103,7 +103,7 @@ uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
     esp_err_t err = i2c_write_sensor(aht20_handle, buf, len);
 
-    return (err == ESP_OK) ? 0 : 1;
+    return (err == ESP_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**

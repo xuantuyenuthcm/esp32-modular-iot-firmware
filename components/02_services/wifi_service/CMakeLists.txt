@@ -5,5 +5,5 @@ idf_component_register(SRCS "wifi_task.c"
                         esp_timer
                     PRIV_REQUIRES
                         app_types
-                        nvs_flash
+                        nvs_manager
 )

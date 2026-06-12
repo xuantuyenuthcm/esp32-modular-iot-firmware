@@ -12,4 +12,8 @@ idf_component_register(SRCS "main.c"
                         bmp280_test
                         # bno055_test
                         ina226_test
+                        nvs_manager
+                        ble_gatts_svc
+                        ble_manager
+                        gatt_svc_wifi
 )
