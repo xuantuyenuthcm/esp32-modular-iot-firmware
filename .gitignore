@@ -60,3 +60,7 @@ build/
 
 sdkconfig*
 *.code-workspace
+build/
+.vscode/
+*.pem
+partitions.csv
