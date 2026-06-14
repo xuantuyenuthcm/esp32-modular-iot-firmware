@@ -100,7 +100,7 @@ static uint8_t a_aht20_iic_write(aht20_handle_t *handle, uint8_t *data, uint16_t
 
 /**
  * @brief     calculate the crc
- * @param[in] *data pointer to a data buffer
+ * @param[in] data pointer to a data buffer
  * @param[in] len length of data
  * @return    crc
  * @note      none
@@ -139,7 +139,7 @@ static uint8_t a_aht20_calc_crc(uint8_t *data, uint8_t len)
  *            - SENSOR_RESET_FAIL
  * @note      none
  */
-static uint8_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
+static sensor_error_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
 {
     uint8_t buf[3];
     uint8_t regs[3];
@@ -292,7 +292,7 @@ uint8_t aht20_deinit(aht20_handle_t *handle)
     {
         handle->debug_print("aht20: iic deinit failed.\n");        /* iic deinit failed */
         
-        return SENSOR_NO_FUNC;                                     /* return error */
+        return SENSOR_DEINIT_FAIL;                                 /* return error */
     }
     handle->inited = 0;                                            /* set closed flag */
     
@@ -497,7 +497,7 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
     {
         handle->debug_print("aht20: sent command failed.\n");         /* sent command failed */
         
-        return SENSOR_READ_FAIL;                                      /* return error */
+        return SENSOR_WRITE_FAIL;                                     /* return error */
     }
     handle->delay_ms(85);                                             /* delay 85ms */
     if (a_aht20_iic_read(handle, &status, 1) != 0)                    /* read the status */

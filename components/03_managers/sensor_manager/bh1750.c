@@ -130,7 +130,7 @@ uint8_t bh1750fvi_basic_deinit(void)
     res = bh1750fvi_deinit(&gs_handle);
     if (res != 0)
     {
-        return SENSOR_NO_FUNC;
+        return SENSOR_DEINIT_FAIL;
     }
     
     return SENSOR_OK;

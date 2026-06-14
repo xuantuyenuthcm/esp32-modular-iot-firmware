@@ -154,7 +154,7 @@ uint8_t bmp280_app_deinit(void)
     /* close bmp280 */
     if (bmp280_deinit(&gs_handle) != 0)
     {
-        return SENSOR_NO_FUNC;
+        return SENSOR_DEINIT_FAIL;
     }
     
     return SENSOR_OK;

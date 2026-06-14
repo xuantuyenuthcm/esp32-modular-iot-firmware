@@ -7,11 +7,12 @@ idf_component_register(SRCS "main.c"
                         mqtt_service
                         wifi_service
                         app_types
+
                         aht20_test
                         bh1750_test
                         bmp280_test
-                        # bno055_test
                         ina226_test
+                        
                         nvs_manager
                         ble_gatts_svc
                         ble_manager

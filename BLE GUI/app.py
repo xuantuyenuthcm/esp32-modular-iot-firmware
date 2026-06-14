@@ -45,6 +45,9 @@ class BLEConfigApp:
         self.send_btn = tk.Button(self.root, text="Send Wifi", command=self.on_send)
         self.send_btn.pack(pady=5)
 
+        self.ota_btn = tk.Button(self.root, text="Update OTA", command=self.ota_update)
+        self.ota_btn.pack(pady=5)
+
         self.device_list = tk.Listbox(self.root)
         self.device_list.pack(fill="both", expand=True)
 
@@ -128,6 +131,9 @@ class BLEConfigApp:
 
     def on_send(self):
         self.run_async(self.send_wifi_logic())
+   
+    def ota_update(self):
+        pass
 
     def update_status(self, text):
         self.root.after(0, lambda: self.status_label.config(text=f"Status: {text}"))

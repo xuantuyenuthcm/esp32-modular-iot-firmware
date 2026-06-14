@@ -87,7 +87,7 @@ uint8_t aht20_app_deinit(void)
     /* deinit aht20 and close bus */
     if (aht20_deinit(&gs_handle) != 0)
     {
-        return SENSOR_NO_FUNC;
+        return SENSOR_DEINIT_FAIL;
     }
     else
     {

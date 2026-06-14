@@ -13,14 +13,6 @@
 static const char* TAG = "sensor_manager";
 static uint8_t error_trigger_flag = SENSOR_OK;
 
-sensor_state_t sensor_state[SENSOR_MAX] = {
-    {"aht20",  0, false, false},
-    {"bh1750", 0, false, false},
-    {"bmp280", 0, false, false},
-    {"bno055", 0, false, false},
-    {"ina226", 0, false, false},
-};
-
 // For reconnecting when sensor connection is lost
 typedef uint8_t (*sensor_i2c_bus_init_fn_t)(void);
 sensor_i2c_bus_init_fn_t sensor_i2c_bus_init_table[SENSOR_MAX] = {
@@ -39,6 +31,16 @@ sensor_init_fn_t sensor_init_table[SENSOR_MAX] = {
     bmp280_full_init,
     bno055_full_init,
     ina226_full_init,
+};
+
+// For remove bus
+typedef uint8_t (*sensor_deinit_fn_t)(void);
+sensor_deinit_fn_t sensor_deinit_table[SENSOR_MAX] = {
+    aht20_interface_iic_deinit,
+    bh1750fvi_interface_iic_deinit,
+    bmp280_interface_iic_deinit,
+    bno055_interface_iic_deinit,
+    ina226_interface_iic_deinit,
 };
 
 /**
@@ -80,7 +82,7 @@ void sensor_init() {
 }
 
 // if the error is small, reset bus, if everything is broken, reset all
-void sensor_eror_check_and_set_flag(uint8_t dev_addr, sensor_id_t dev_id) {
+static void sensor_eror_check_and_set_flag(uint8_t dev_addr, sensor_id_t dev_id) {
     esp_err_t ret;
     if ((ret = i2c_master_probe(i2c_get_bus_handle(), dev_addr, 100)) != ESP_OK) {
         ESP_LOGE(TAG, "0x%02X got bus error, trying to fix...", dev_addr);
@@ -93,10 +95,12 @@ void sensor_eror_check_and_set_flag(uint8_t dev_addr, sensor_id_t dev_id) {
         error_trigger_flag = SENSOR_HARDWARE_ERR;
     }
 }
+
 // Find and fix which sensor cause the bus error
-void sensor_find_error_and_fix_small() {
+static void sensor_find_error_and_fix_small() {
     for (int i = 0; i < SENSOR_MAX; i++) {
         if (sensor_state[i].i2c_init_flag == false) {
+            sensor_deinit_table[i]();
             sensor_i2c_bus_init_table[i]();
             error_trigger_flag = SENSOR_OK;
         }
@@ -104,9 +108,10 @@ void sensor_find_error_and_fix_small() {
 }
 
 // Find and fix which sensor cause the big error
-void sensor_find_error_and_fix_all() {
+static void sensor_find_error_and_fix_all() {
     for (int i = 0; i < SENSOR_MAX; i++) {
         if (sensor_state[i].sensor_init_flag == false) {
+            sensor_deinit_table[i]();
             sensor_init_table[i]();
             error_trigger_flag = SENSOR_OK;
         }

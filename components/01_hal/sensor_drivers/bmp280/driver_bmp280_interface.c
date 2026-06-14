@@ -35,7 +35,6 @@
  */
 
 #include "driver_bmp280_interface.h"
-#include "sensor_manager.h"
 
 #define BMP280_ADDRESS      0x76
 
@@ -43,32 +42,18 @@ static i2c_master_dev_handle_t bmp280_handle = NULL;
 
 /**
  * @brief  interface iic bus init
- * @return status code
- *         - 0 success
- *         - 1 iic init failed
- * @note   none
  */
 uint8_t bmp280_interface_iic_init(void)
 {
-    sensor_state_t sensor_state_tmp;
-    sensor_state_tmp = i2c_add_device(BMP280_ADDRESS, &bmp280_handle);
-    sensor_state[SENSOR_BMP280].addr = sensor_state_tmp.addr;
-    sensor_state[SENSOR_BMP280].i2c_init_flag = sensor_state_tmp.i2c_init_flag;
-    ESP_LOGI(TAG_I2C, "BMP280 sensor added to I2C bus!");
-
-    return SENSOR_OK;
+    return sensor_driver_interface_init(&bmp280_handle, SENSOR_BMP280);
 }
 
 /**
  * @brief  interface iic bus deinit
- * @return status code
- *         - 0 success
- *         - 1 iic deinit failed
- * @note   none
  */
 uint8_t bmp280_interface_iic_deinit(void)
 {   
-    return SENSOR_OK;
+    return sensor_driver_interface_deinit(bmp280_handle, SENSOR_BMP280);
 }
 
 /**
@@ -85,9 +70,7 @@ uint8_t bmp280_interface_iic_deinit(void)
 uint8_t bmp280_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     uint8_t reg_addr = reg;
-    esp_err_t err = i2c_write_read_sensor(bmp280_handle, &reg_addr, 1, buf, len);
-
-    return (err == SENSOR_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
+    return (i2c_write_read_sensor(bmp280_handle, &reg_addr, 1, buf, len) == ESP_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**
@@ -110,9 +93,7 @@ uint8_t bmp280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_write_sensor(bmp280_handle, write_buf, len + 1);
-
-    return (err == SENSOR_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
+    return (i2c_write_sensor(bmp280_handle, write_buf, len + 1) == ESP_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**

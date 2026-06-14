@@ -346,7 +346,7 @@ uint8_t bh1750fvi_deinit(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: iic deinit failed.\n");        /* iic deinit failed */
         
-        return SENSOR_NO_FUNC;                                                      /* return error */
+        return SENSOR_DEINIT_FAIL;                                                      /* return error */
     }
     handle->inited = 0;                                                /* flag closed */
     

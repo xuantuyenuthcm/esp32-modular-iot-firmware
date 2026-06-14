@@ -155,7 +155,7 @@ uint8_t bme280_app_read(float *temperature, float *pressure, float *humidity_per
  */
 uint8_t bme280_app_deinit(void) {
     if (bme280_deinit(&gs_handle) != 0) {
-        return SENSOR_NO_FUNC;
+        return SENSOR_DEINIT_FAIL;
     }
 
     return SENSOR_OK;

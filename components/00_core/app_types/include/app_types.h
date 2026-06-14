@@ -23,6 +23,9 @@
 #define EVT_MQTT_CONNECTED  (1 << 1)
 #define EVT_OTA_IN_PROGRESS (1 << 2)
 
+#define I2C_MAX_RETRY       3
+#define I2C_RETRY_DELAY_MS  10
+
 typedef enum {
     CMD_UNKNOWN = 0,
     CMD_GPIO_SET,

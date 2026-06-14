@@ -4,5 +4,4 @@ idf_component_register(SRCS "i2c_scan.c" "i2c_manager.c"
                         esp_driver_i2c
                         app_errors  
                         app_types
-                        sensor_manager                                          
 )
