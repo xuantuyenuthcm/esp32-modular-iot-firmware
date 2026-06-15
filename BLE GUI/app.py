@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import asyncio
 import threading
 from bleak import BleakScanner, BleakClient
@@ -7,7 +8,7 @@ class BLEConfigApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ESP32 WiFi Config")
-        self.root.geometry("400x500")
+        self.root.geometry("800x400")
 
         self.client = None
         self.loop = asyncio.new_event_loop()
@@ -20,36 +21,76 @@ class BLEConfigApp:
         self.thread.start()
 
     def setup_ui(self):
-        tk.Label(self.root, text="Wifi SSID").pack()
-        self.ssid_entry = tk.Entry(self.root)
-        self.ssid_entry.pack()
+        # =================== Tab manager ===================
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill="both", expand="True", padx=10, pady=10)
 
-        tk.Label(self.root, text="Password").pack()
-        self.pass_entry = tk.Entry(self.root, show="*")
-        self.pass_entry.pack()
+        self.tab_connect_bluetooth = tk.Frame(self.notebook)
+        self.notebook.add(self.tab_connect_bluetooth, text="Connect")
 
-        self.scan_btn = tk.Button(self.root, text="Scan BLE", command=self.on_scan)
-        self.scan_btn.pack(pady=5)
+        self.tab_sensor_control = tk.Frame(self.notebook)
+        self.notebook.add(self.tab_sensor_control, text="Sensor")
+        # =================== Tab manager ===================
 
-        # =================== Connect Frame ===================
-        button_frame = tk.Frame(self.root)
-        button_frame.pack(pady=5)
+        # =================== Connect tab ===================
+        # Connect tab =================== Connect Bluetooth Frame ===================
+        self.button_frame_connect_btn = tk.Frame(self.tab_connect_bluetooth)
+        self.button_frame_connect_btn.pack(padx=10, pady=5, anchor="w")
 
-        self.connect_btn = tk.Button(button_frame, text="Connect", command=self.on_connect)
-        self.connect_btn.pack(side=tk.LEFT, padx=5)
+        self.scan_btn = tk.Button(self.button_frame_connect_btn, text="Scan", command=self.on_scan)
+        self.scan_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.disconnect_btn = tk.Button(button_frame, text="Disconnect", command=self.on_disconnect)
-        self.disconnect_btn.pack(side=tk.LEFT, padx=5)
-        # =================== Connect Frame ===================
+        self.connect_btn = tk.Button(self.button_frame_connect_btn, text="Connect", command=self.on_connect)
+        self.connect_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.send_btn = tk.Button(self.root, text="Send Wifi", command=self.on_send)
-        self.send_btn.pack(pady=5)
+        self.disconnect_btn = tk.Button(self.button_frame_connect_btn, text="Disconnect", command=self.on_disconnect)
+        self.disconnect_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.ota_btn = tk.Button(self.root, text="Update OTA", command=self.ota_update)
-        self.ota_btn.pack(pady=5)
+        self.device_list = tk.Listbox(self.tab_connect_bluetooth)
+        self.device_list.pack(fill="both", expand=True, padx=10)
+        # Connect tab =================== Connect Bluetooth Frame ===================
+        # =================== Connect tab ===================
 
-        self.device_list = tk.Listbox(self.root)
-        self.device_list.pack(fill="both", expand=True)
+        # =================== Sensor tab ===================
+        # Sensor tab =================== Status light frame ===================
+        self.frame_status = tk.Frame(self.tab_sensor_control)
+        self.frame_status.pack(padx=10, pady=5, anchor="w")
+
+        PAD_X = 5
+        sensor_names = ["AHT20", "BH1750", "BMP280", "BNO055", "INA226"]
+        self.canvases = {}
+        self.lights = {}
+
+        for name in sensor_names:
+            self.status_canvas = tk.Canvas(self.frame_status, width=20, height=20, highlightthickness=0)
+            self.status_canvas.pack(side="left", padx=PAD_X)
+            light = self.status_canvas.create_oval(2, 2, 18, 18, fill="red", outline="darkred")
+            tk.Label(self.frame_status, text=name).pack(side="left", padx=(0, 20))
+            self.canvases[name] = self.status_canvas
+            self.lights[name] = light
+
+        # code below is for connect
+        # self.status_canvas.itemconfig(self.status_light, fill="green", outline="darkgreen")
+        # self.status_canvas.itemconfig(self.status_light, fill="red", outline="darkred")
+        # Sensor tab =================== Status light frame ===================
+
+        # =================== Sensor tab ===================
+        
+
+
+        # tk.Label(self.root, text="Wifi SSID").pack(anchor= "w", padx=10)
+        # self.ssid_entry = tk.Entry(self.root)
+        # self.ssid_entry.pack(anchor="w", padx=10)
+
+        # tk.Label(self.root, text="Password").pack(anchor= "w", padx=10)
+        # self.pass_entry = tk.Entry(self.root, show="*")
+        # self.pass_entry.pack(anchor="w", padx=10)
+
+        # self.send_btn = tk.Button(self.root, text="Send Wifi", command=self.on_send)
+        # self.send_btn.pack(pady=5)
+
+        # self.ota_btn = tk.Button(self.root, text="Update OTA", command=self.ota_update)
+        # self.ota_btn.pack(pady=5)
 
         self.status_label = tk.Label(self.root, text="Status: Idle", fg="blue")
         self.status_label.pack(pady=10)
