@@ -6,5 +6,9 @@ int ble_wifi_ssid_access_cb(uint16_t conn_handle, uint16_t attr_handle,
                             struct ble_gatt_access_ctxt *ctxt, void *arg);
 
 int ble_wifi_pw_access_cb(uint16_t conn_handle, uint16_t attr_handle,
-                          struct ble_gatt_access_ctxt *ctxt, void *arg);
+                            struct ble_gatt_access_ctxt *ctxt, void *arg);
+
+int ble_sensor_ctrl_cb(uint16_t conn_handle, uint16_t attr_handle,
+                            struct ble_gatt_access_ctxt *ctxt, void *arg);
+
 #endif

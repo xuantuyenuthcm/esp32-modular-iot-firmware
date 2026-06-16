@@ -5,8 +5,13 @@
 const char *TAG_I2C = "I2C";
 
 static i2c_master_bus_handle_t bus_handle = NULL;
+static bool is_i2c_inited = false;
 
 void i2c_init() {
+    if(is_i2c_inited) {
+        return;
+    }
+
     if (bus_handle != NULL) {
         return;
     }
@@ -20,7 +25,8 @@ void i2c_init() {
         .flags.enable_internal_pullup = true,
     };
 
-    ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus_handle));        
+    ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus_handle));     
+    is_i2c_inited = true;
 }
 
 static i2c_device_config_t i2c_get_dev_config(uint8_t dev_addr) {

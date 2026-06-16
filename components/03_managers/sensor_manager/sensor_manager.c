@@ -24,7 +24,6 @@ sensor_i2c_bus_init_fn_t sensor_i2c_bus_init_table[SENSOR_MAX] = {
 };
 
 // For reconnecting when everything is broken
-typedef esp_err_t (*sensor_init_fn_t)(void);
 sensor_init_fn_t sensor_init_table[SENSOR_MAX] = {
     aht20_full_init,
     bh1750fvi_full_init,

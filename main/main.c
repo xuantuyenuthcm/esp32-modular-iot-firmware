@@ -74,6 +74,6 @@ void app_main(void)
     xTaskCreate(mqtt_task, "mqtt", TASK_STACK_MQTT, NULL, TASK_PRIO_MQTT, NULL);
     xEventGroupWaitBits(g_system_event_group, EVT_MQTT_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);
 
-    xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
+    // xTaskCreate(sensor_task, "sensor", TASK_STACK_SENSOR, NULL, TASK_PRIO_SENSOR, NULL);
 
 }
