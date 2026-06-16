@@ -54,7 +54,7 @@ uint8_t bh1750fvi_interface_iic_init(void)
  */
 uint8_t bh1750fvi_interface_iic_deinit(void)
 {
-    return sensor_driver_interface_deinit(bh1750_handle, SENSOR_BH1750);
+    return sensor_driver_interface_deinit(&bh1750_handle, SENSOR_BH1750);
 }
 
 /**

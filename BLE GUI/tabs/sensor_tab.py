@@ -13,14 +13,19 @@ class SensorControlTab(tk.Frame):
             "BH1750": 1,
             "BMP280": 2,
             "BNO055": 3,
-            "INA226": 4
+            "INA226": 4,
         }
-        self.canvases = {}
-        self.lights = {}
+        self.canvases       = {}
+        self.lights         = {}
+        self.buttons_conn   = {}
+        self.buttons_read   = {}
+        self.MAX_SENSOR = 5
         for name, cmd in self.sensor_commands.items():
             # Frame
             frame_status = tk.Frame(self)
             frame_status.pack(fill="x", padx=5, pady=2)
+            frame_status.grid_columnconfigure(2, minsize=80)
+            frame_status.grid_columnconfigure(3, minsize=50)
             # Light status
             status_canvas = tk.Canvas(frame_status, width=20, height=20, highlightthickness=0)
             status_canvas.grid(row=0, column=0, padx=(0, 5), pady=2)
@@ -31,22 +36,25 @@ class SensorControlTab(tk.Frame):
             # Button
             connect_sensor_btn = tk.Button(frame_status, text="Connect", command=functools.partial(self.on_send_command, name, cmd))
             connect_sensor_btn.grid(row=0, column=2, padx=5, pady=2)
+            read_sensor_btn = tk.Button(frame_status, text="Read", command=functools.partial(self.on_send_command, name, cmd + self.MAX_SENSOR))
+            read_sensor_btn.grid(row=0, column=3, padx=5, pady=2)
             # Save to array
-            self.canvases[name] = status_canvas
-            self.lights[name] = light
+            self.canvases[name]     = status_canvas
+            self.lights[name]       = light
+            self.buttons_conn[name] = connect_sensor_btn
+            self.buttons_read[name] = read_sensor_btn
+
         # Connect all button
         frame_connect_all = tk.Frame(self)
         frame_connect_all.pack(fill="x", padx=5, pady=5)
-        connect_all_sensor_btn = tk.Button(frame_connect_all, text="Connect All", width=19)
+        connect_all_sensor_btn = tk.Button(frame_connect_all, text="Connect All", width=19, command=functools.partial(self.on_send_command, "all", 128))
         connect_all_sensor_btn.pack(side="left")
+
         # Disconnect all button
         frame_disconnect_all = tk.Frame(self)
         frame_disconnect_all.pack(fill="x", padx=5, pady=5)
-        disconnect_all_sensor_btn = tk.Button(frame_disconnect_all, text="Disconnect All", width=19)
+        disconnect_all_sensor_btn = tk.Button(frame_disconnect_all, text="Disconnect All", width=19, command=functools.partial(self.on_send_command, "all", 129))
         disconnect_all_sensor_btn.pack(side="left")
-        # code below is for connect
-        # self.status_canvas.itemconfig(self.status_light, fill="green", outline="darkgreen")
-        # self.status_canvas.itemconfig(self.status_light, fill="red", outline="darkred")
 
     def on_send_command(self, sensor_name, command_int):
         if not self.app.client or not self.app.client.is_connected:
@@ -75,11 +83,17 @@ class SensorControlTab(tk.Frame):
         if sensor_name and sensor_name in self.lights:
             canvas = self.canvases[sensor_name]
             light  = self.lights[sensor_name]
+            sensor_btn_conn = self.buttons_conn[sensor_name]
+            sensor_btn_read = self.buttons_read[sensor_name]
 
             if status == 0x00:
                 self.app.root.after(0, lambda: canvas.itemconfig(light, fill="lightgreen", outline="darkgreen"))
-                self.app.update_status(f"Sensor {sensor_name} connected!")
+                self.app.root.after(0, lambda: sensor_btn.config(text="Disconnect"))
+            elif status == 0x01:
+                self.app.root.after(0, lambda: sensor_btn_read.config(text="Stop"))
+            elif status == 0x02:
+                self.app.root.after(0, lambda: sensor_btn_read.config(text="Read"))
             else:
                 self.app.root.after(0, lambda: canvas.itemconfig(light, fill="red", outline="darkred"))
-                self.app.update_status(f"Sensor {sensor_name} init failed!")
+                self.app.root.after(0, lambda: sensor_btn.config(text="Connect"))
         # =================== Sensor tab ===================

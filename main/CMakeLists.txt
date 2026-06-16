@@ -16,5 +16,5 @@ idf_component_register(SRCS "main.c"
                         nvs_manager
                         ble_gatts_svc
                         ble_manager
-                        gatt_svc_wifi
+                        gatt_svcs
 )

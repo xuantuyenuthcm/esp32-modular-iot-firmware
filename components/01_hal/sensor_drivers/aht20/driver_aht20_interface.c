@@ -61,7 +61,7 @@ uint8_t aht20_interface_iic_init(void)
  */
 uint8_t aht20_interface_iic_deinit(void)
 {
-    return sensor_driver_interface_deinit(aht20_handle, SENSOR_AHT20);
+    return sensor_driver_interface_deinit(&aht20_handle, SENSOR_AHT20);
 }
 
 /**

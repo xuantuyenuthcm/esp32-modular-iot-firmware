@@ -24,9 +24,9 @@ class ConnectTab(tk.Frame):
         # =================== Connect Bluetooth Frame =================== 
 
     def notification_handler(self, sender, data):
-        msg = data.decode()
-        self.app.update_status(f"ESP32: {msg}")
-
+        # msg = data.decode()
+        # self.app.update_status(f"ESP32: {msg}")
+        self.app.update_status(f"ESP32: Sensor ID={data[0]}, Status={hex(data[1])}")
         if len(data) >= 2:
             sensor_id = data[0]
             status = data[1]

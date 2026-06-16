@@ -15,7 +15,7 @@ set(EXTRA_COMPONENT_DIRS
     components/01_hal/sensor_drivers/sensor_driver_interface_manager
     components/02_services/ble_service/ble_gatts_svc
     components/02_services/ble_service/ble_manager
-    components/02_services/ble_service/gatt_svc_wifi
+    components/02_services/ble_service/gatt_svcs
     components/02_services/mqtt_service
     components/02_services/wifi_service
     components/03_managers/sensor_manager

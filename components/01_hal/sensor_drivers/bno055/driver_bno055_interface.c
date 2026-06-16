@@ -61,7 +61,7 @@ uint8_t bno055_interface_iic_init(void)
  */
 uint8_t bno055_interface_iic_deinit(void)
 {
-    return sensor_driver_interface_deinit(bno055_handle, SENSOR_BNO055);
+    return sensor_driver_interface_deinit(&bno055_handle, SENSOR_BNO055);
 }
 
 /**

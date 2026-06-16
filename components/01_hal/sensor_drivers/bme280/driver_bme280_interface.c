@@ -57,7 +57,7 @@ uint8_t bme280_interface_iic_init(void)
  */
 uint8_t bme280_interface_iic_deinit(void)
 {   
-    return sensor_driver_interface_deinit(bme280_handle, SENSOR_BMP280);
+    return sensor_driver_interface_deinit(&bme280_handle, SENSOR_BMP280);
 }
 
 /**

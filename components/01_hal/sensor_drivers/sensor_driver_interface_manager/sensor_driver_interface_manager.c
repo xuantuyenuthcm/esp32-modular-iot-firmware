@@ -35,7 +35,7 @@ uint8_t sensor_driver_interface_init(i2c_master_dev_handle_t *dev_handle, sensor
 /**
  * @brief An interface for sensor de-initialization function
  */
-uint8_t sensor_driver_interface_deinit(i2c_master_dev_handle_t dev_handle, sensor_id_t sensor_id)
+uint8_t sensor_driver_interface_deinit(i2c_master_dev_handle_t *dev_handle, sensor_id_t sensor_id)
 {
     esp_err_t ret;
 
@@ -44,14 +44,20 @@ uint8_t sensor_driver_interface_deinit(i2c_master_dev_handle_t dev_handle, senso
         return SENSOR_HANDLE_NULL;
     }
 
-    ESP_LOGE(TAG_I2C, "Removing %s...", sensor_id_to_str(sensor_id));
+    if (*dev_handle == NULL) {
+        ESP_LOGW(TAG_I2C, "%s device handle is ALREADY NULL!", sensor_id_to_str(sensor_id));
+        return SENSOR_OK;
+    }
 
-    if ((ret = i2c_master_bus_rm_device(dev_handle)) != ESP_OK) {
+    ESP_LOGI(TAG_I2C, "Removing %s...", sensor_id_to_str(sensor_id));
+
+    if ((ret = i2c_master_bus_rm_device(*dev_handle)) != ESP_OK) {
         ESP_LOGE(TAG_I2C, "Failed to remove AHT20 device: %s", esp_err_to_name(ret));
         return SENSOR_DEINIT_FAIL;
     }
 
-    dev_handle = NULL;
+    *dev_handle = NULL;  
+    sensor_state[sensor_id].sensor_init_flag = false;
     ESP_LOGI(TAG_I2C, "%s sensor removed from I2C bus!", sensor_id_to_str(sensor_id));
     
     return SENSOR_OK;

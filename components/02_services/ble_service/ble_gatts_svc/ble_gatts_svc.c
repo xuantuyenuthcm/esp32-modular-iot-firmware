@@ -4,7 +4,7 @@
 #include "host/ble_hs.h"
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
-#include "gatt_svc_wifi.h"
+#include "gatt_svcs.h"
 
 static const char *TAG = "GATT_SVC";
 
@@ -26,8 +26,6 @@ static const ble_uuid128_t sensor_monitor_uuid = BLE_UUID128_INIT(0xea, 0xeb, 0x
 // 45fb1ea9-6f80-48a4-9337-4e8e4d455e2c
 static const ble_uuid128_t sensor_ctrl_uuid = BLE_UUID128_INIT(0x2c, 0x5e, 0x45, 0x4d, 0x8e, 0x4e, 0x37, 0x93,
                                                                   0xa4, 0x48, 0x80, 0x6f, 0xa9, 0x1e, 0xfb, 0x45);
-static uint8_t gatt_svr_sec_test_static_val;
-
 // GATT table
 static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
     {

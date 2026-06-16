@@ -25,7 +25,7 @@ esp_err_t aht20_full_init(void)
     res = aht20_init(&gs_handle);
     if (res != 0)
     {
-        aht20_interface_debug_print("aht20: init failed.\n");
+        aht20_interface_debug_print("aht20: init failed, res = %u.\n", res); 
         
         return SENSOR_BUS_ERR;
     }

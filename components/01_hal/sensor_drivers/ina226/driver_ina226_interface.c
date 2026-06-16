@@ -61,7 +61,7 @@ uint8_t ina226_interface_iic_init(void)
  */
 uint8_t ina226_interface_iic_deinit(void)
 {
-    return sensor_driver_interface_deinit(ina226_handle, SENSOR_INA226);
+    return sensor_driver_interface_deinit(&ina226_handle, SENSOR_INA226);
 }
 
 /**
