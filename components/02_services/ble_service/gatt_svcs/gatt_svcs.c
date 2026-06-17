@@ -229,10 +229,11 @@ void bmp280_read(void *pvParameter) {
         vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
 
         // Packet to notify
-        uint8_t notify_data[6];
+        uint8_t notify_data[10];
         notify_data[0] = BMP280_NOTIFY;
         notify_data[1] = BMP280_NOTIFY;
         memcpy(&notify_data[2], &pressure, sizeof(float));
+        memcpy(&notify_data[6], &temperature, sizeof(float));
 
         // update status
         struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));

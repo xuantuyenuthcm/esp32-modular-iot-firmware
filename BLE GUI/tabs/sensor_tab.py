@@ -107,17 +107,17 @@ class SensorControlTab(tk.Frame):
             return
 
         try:
-            if sensor_id == 0 and len(payload) >= 10:   # AHT20
-                hum, temp = struct.unpack_from("<ff", payload, 2)
-                chart.push_batch({"Humidity (%)": hum, "Temp (°C)": temp})
+            if sensor_id == 11 and len(payload) >= 3:   # AHT20
+                hum, = struct.unpack_from("<B", payload, 2)
+                chart.push("Humidity (%)", hum) 
 
             elif sensor_id == 12 and len(payload) >= 6:  # BH1750
                 lux, = struct.unpack_from("<f", payload, 2)
                 chart.push("Lux", lux)
 
-            elif sensor_id == 13 and len(payload) >= 6:  # BMP280
-                pres, = struct.unpack_from("<f", payload, 2)
-                chart.push("Pressure (hPa)", pres)
+            elif sensor_id == 13 and len(payload) >= 10:  # BMP280
+                pres, temp = struct.unpack_from("<ff", payload, 2)
+                chart.push_batch({"Pressure (hPa)":pres, "Temp (°C)": temp})
 
             elif sensor_id == 14 and len(payload) >= 6:  # BNO055
                 ax, = struct.unpack_from("<f", payload, 2)
