@@ -5,21 +5,21 @@ class ConnectTab(tk.Frame):
     def __init__(self, parent, app):
         super().__init__(parent)
         self.app = app
-
+        FONT_SIZE_CONN = 12
         # =================== Connect Bluetooth Frame ===================
         self.button_frame_connect_btn = tk.Frame(self)
         self.button_frame_connect_btn.pack(padx=10, pady=5, anchor="w")
 
-        self.scan_btn = tk.Button(self.button_frame_connect_btn, text="Scan", command=self.on_scan)
+        self.scan_btn = tk.Button(self.button_frame_connect_btn, text="Scan", font=("Segoe UI", FONT_SIZE_CONN) ,command=self.on_scan)
         self.scan_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.connect_btn = tk.Button(self.button_frame_connect_btn, text="Connect", command=self.on_connect)
+        self.connect_btn = tk.Button(self.button_frame_connect_btn, text="Connect", font=("Segoe UI", FONT_SIZE_CONN) , command=self.on_connect)
         self.connect_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.disconnect_btn = tk.Button(self.button_frame_connect_btn, text="Disconnect", command=self.on_disconnect)
+        self.disconnect_btn = tk.Button(self.button_frame_connect_btn, text="Disconnect", font=("Segoe UI", FONT_SIZE_CONN) , command=self.on_disconnect)
         self.disconnect_btn.pack(side="left", padx=(0, 5), ipadx=10, ipady=3)
 
-        self.device_list = tk.Listbox(self)
+        self.device_list = tk.Listbox(self, font=("Segoe UI", 12))
         self.device_list.pack(fill="both", expand=True, padx=10)
         # =================== Connect Bluetooth Frame =================== 
 
@@ -27,11 +27,16 @@ class ConnectTab(tk.Frame):
         # msg = data.decode()
         # self.app.update_status(f"ESP32: {msg}")
         self.app.update_status(f"ESP32: Sensor ID={data[0]}, Status={hex(data[1])}")
-        if len(data) >= 2:
-            sensor_id = data[0]
-            status = data[1]
+        self.app.update_status(f"Got {len(data)} bytes")
+        sensor_id   = data[0]
+        status      = data[1]
+        
+        if len(data) == 2:
+            # Update status LED / button in SensorTab
             self.app.tab_sensor_control.update_sensor_status(sensor_id, status)
-
+        # If the packet carries measurement payload, forward to chart parser
+        if len(data) > 2:
+            self.app.tab_sensor_control.parse_and_push(sensor_id, data)
 
     # --- Bridge giữa UI và Async ---
     def on_scan(self):
@@ -84,17 +89,17 @@ class ConnectTab(tk.Frame):
         except Exception as e:
             self.app.update_status(f"Disconnect error: {e}")
 
-    async def send_wifi_logic(self):
-        if not self.app.client or not self.app.client.is_connected:
-            self.app.update_status("Error: Not connected!")
-            return
+    # async def send_wifi_logic(self):
+    #     if not self.app.client or not self.app.client.is_connected:
+    #         self.app.update_status("Error: Not connected!")
+    #         return
         
-        # SSID UUID
-        WRITE_UUID = "6fc254b7-6bc0-475b-b836-720d2287922d"
-        data = f"{self.ssid_entry.get()}".encode()
-        await self.app.client.write_gatt_char(WRITE_UUID, data)
-        # PASSWORD UUID
-        WRITE_UUID = "cfedbbc2-0598-4581-b1fd-b7d54fec0396"
-        data = f"{self.pass_entry.get()}".encode()
-        await self.app.client.write_gatt_char(WRITE_UUID, data)
-        self.app.update_status("Data sent!")
+    #     # SSID UUID
+    #     WRITE_UUID = "6fc254b7-6bc0-475b-b836-720d2287922d"
+    #     data = f"{self.ssid_entry.get()}".encode()
+    #     await self.app.client.write_gatt_char(WRITE_UUID, data)
+    #     # PASSWORD UUID
+    #     WRITE_UUID = "cfedbbc2-0598-4581-b1fd-b7d54fec0396"
+    #     data = f"{self.pass_entry.get()}".encode()
+    #     await self.app.client.write_gatt_char(WRITE_UUID, data)
+    #     self.app.update_status("Data sent!")

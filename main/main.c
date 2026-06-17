@@ -26,6 +26,8 @@ QueueHandle_t      g_control_queue          = NULL;
 QueueHandle_t      g_sensor_queue           = NULL;
 QueueHandle_t      g_ble_send_queue         = NULL; 
 
+QueueHandle_t      g_pressure_notify_queue  = NULL;
+
 static esp_err_t rtos_resources_create(void)
 {
     g_system_event_group = xEventGroupCreate();
@@ -45,6 +47,9 @@ static esp_err_t rtos_resources_create(void)
     
     g_ble_send_queue = xQueueCreate(10, sizeof(mqtt_publish_msg_t));
     if (g_ble_send_queue == NULL) return ESP_ERR_NO_MEM;
+
+    g_pressure_notify_queue = xQueueCreate(10, sizeof(float));
+    if (g_pressure_notify_queue == NULL) return ESP_ERR_NO_MEM;
 
     ESP_LOGI(TAG, "RTOS resources created");
     return ESP_OK;

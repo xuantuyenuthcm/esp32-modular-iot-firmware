@@ -1,9 +1,4 @@
 #include "sensor_manager.h"
-#include "aht20.h"
-#include "bh1750.h"
-#include "bmp280.h"
-#include "bno055.h"
-#include "ina226.h"
 #include "i2c_error.h"
 
 #define AWS_DEVICE_ID "esp32-001"
@@ -203,79 +198,3 @@ void sensor_task(void *pvParameter) {
     }
 }
 
-
-#define SEN_DELAY 3000
-void aht20_read(void *pvParameter) {
-    esp_err_t ret = ESP_OK;
-    uint8_t humidity;
-    while (1) {
-        if((ret = aht20_app_read_hum(&humidity)) == ESP_OK) {
-            ESP_LOGI("GUI", "Humidity = %u%%", humidity);
-        }
-        else {
-            ESP_LOGI("GUI", "Humidity = none");
-        }
-        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
-    
-    }
-}
-
-void bh1750_read(void *pvParameter) {
-    esp_err_t ret = ESP_OK;
-    float lux;
-    while (1) {
-        if ((ret = bh1750fvi_basic_read(&lux)) == ESP_OK) {
-            ESP_LOGI("GUI", "Lux = %.2f", lux);
-        }
-        else {
-            ESP_LOGI("GUI", "Lux = none");
-        }
-        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
-    }
-}
-
-void bmp280_read(void *pvParameter) {
-    esp_err_t ret = ESP_OK;
-    float temperature;
-    float pressure;
-    while (1) {
-        if ((ret = bmp280_app_read(&temperature, &pressure)) == ESP_OK) {
-            ESP_LOGI("GUI", "Temperature = %.2f", temperature);
-            ESP_LOGI("GUI", "Pressure = %.2f", pressure);
-        }
-        else {
-            ESP_LOGI("GUI", "Temperature = none");
-            ESP_LOGI("GUI", "Pressure = none");
-        }
-        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
-    }
-}
-
-void bno055_read(void *pvParameter) {
-    esp_err_t ret = ESP_OK;
-    float accel;
-    while (1) {
-        if ((ret = bno055_accel_read(&accel)) == ESP_OK) {
-            ESP_LOGI("GUI", "Accel = %.2f", accel);
-        }
-        else {
-            ESP_LOGI("GUI", "Accel = none");
-
-        }
-        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
-    }
-}
-
-void ina226_read(void *pvParameter) {
-    esp_err_t ret = ESP_OK;
-    float battery;
-    while (1) {
-        if ((ret = ina226_read_get_battery(&battery)) == ESP_OK) {
-            ESP_LOGI("GUI", "Battery = %.2f%%", battery);
-        }
-        else {
-            ESP_LOGI("GUI", "Battery = none");
-        }
-        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
-    }
-}

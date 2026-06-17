@@ -56,6 +56,13 @@ typedef enum {
     INA226_READ,
     SENSOR_MAX_READ, // Total number of read cmd
 
+    AHT20_NOTIFY,
+    BH1750_NOTIFY,
+    BMP280_NOTIFY,
+    BNO055_NOTIFY,
+    INA226_NOTIFY,
+    SENSOR_MAX_NOTIFY, // Total number of notify cmd
+
     ALL_CONNECT = 128,
     ALL_DISCONNECT = 129,
 } ble_cmd_recv_t;
@@ -142,6 +149,156 @@ char task_name[SENSOR_MAX][20] = {
     "ina226_read_task"
 };
 
+typedef struct {
+    uint16_t conn_handle;
+    uint16_t attr_handle;
+} task_param_t;
+
+#define SEN_DELAY 3000
+void aht20_read(void *pvParameter) {
+    task_param_t *param = (task_param_t *)pvParameter;
+
+    esp_err_t ret = ESP_OK;
+    uint8_t humidity;
+    while (1) {
+        if((ret = aht20_app_read_hum(&humidity)) == ESP_OK) {
+            ESP_LOGI("GUI", "Humidity = %u%%", humidity);
+        }
+        else {
+            ESP_LOGI("GUI", "Humidity = none");
+        }
+        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
+
+        // Packet to notify
+        uint8_t notify_data[6];
+        notify_data[0] = AHT20_NOTIFY;
+        notify_data[1] = AHT20_NOTIFY;
+        memcpy(&notify_data[2], &humidity, sizeof(uint8_t));
+
+        // update status
+        struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+        if (om) {
+            ble_gatts_notify_custom(param->conn_handle, param->attr_handle, om);
+        }  
+    }
+}
+
+void bh1750_read(void *pvParameter) {
+    task_param_t *param = (task_param_t *)pvParameter;
+
+    esp_err_t ret = ESP_OK;
+    float lux;
+    while (1) {
+        if ((ret = bh1750fvi_basic_read(&lux)) == ESP_OK) {
+            ESP_LOGI("GUI", "Lux = %.2f", lux);
+        }
+        else {
+            ESP_LOGI("GUI", "Lux = none");
+        }
+        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
+
+        // Packet to notify
+        uint8_t notify_data[6];
+        notify_data[0] = BH1750_NOTIFY;
+        notify_data[1] = BH1750_NOTIFY;
+        memcpy(&notify_data[2], &lux, sizeof(float));
+
+        // update status
+        struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+        if (om) {
+            ble_gatts_notify_custom(param->conn_handle, param->attr_handle, om);
+        }  
+    }
+}
+
+void bmp280_read(void *pvParameter) {
+    task_param_t *param = (task_param_t *)pvParameter;
+
+    esp_err_t ret = ESP_OK;
+    float temperature;
+    float pressure;
+    while (1) {
+        if ((ret = bmp280_app_read(&temperature, &pressure)) == ESP_OK) {
+            ESP_LOGI("GUI", "Temperature = %.2f", temperature);
+            ESP_LOGI("GUI", "Pressure = %.2f", pressure);
+        }
+        else {
+            ESP_LOGI("GUI", "Temperature = none");
+            ESP_LOGI("GUI", "Pressure = none");
+        }
+        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
+
+        // Packet to notify
+        uint8_t notify_data[6];
+        notify_data[0] = BMP280_NOTIFY;
+        notify_data[1] = BMP280_NOTIFY;
+        memcpy(&notify_data[2], &pressure, sizeof(float));
+
+        // update status
+        struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+        if (om) {
+            ble_gatts_notify_custom(param->conn_handle, param->attr_handle, om);
+        }  
+    }
+}
+
+void bno055_read(void *pvParameter) {
+    task_param_t *param = (task_param_t *)pvParameter;
+
+    esp_err_t ret = ESP_OK;
+    float accel;
+    while (1) {
+        if ((ret = bno055_accel_read(&accel)) == ESP_OK) {
+            ESP_LOGI("GUI", "Accel = %.2f", accel);
+        }
+        else {
+            ESP_LOGI("GUI", "Accel = none");
+
+        }
+        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
+
+        // Packet to notify
+        uint8_t notify_data[6];
+        notify_data[0] = BNO055_NOTIFY;
+        notify_data[1] = BNO055_NOTIFY;
+        memcpy(&notify_data[2], &accel, sizeof(float));
+
+        // update status
+        struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+        if (om) {
+            ble_gatts_notify_custom(param->conn_handle, param->attr_handle, om);
+        }  
+    }
+}
+
+void ina226_read(void *pvParameter) {
+    task_param_t *param = (task_param_t *)pvParameter;
+
+    esp_err_t ret = ESP_OK;
+    float battery;
+    while (1) {
+        if ((ret = ina226_read_get_battery(&battery)) == ESP_OK) {
+            ESP_LOGI("GUI", "Battery = %.2f%%", battery);
+        }
+        else {
+            ESP_LOGI("GUI", "Battery = none");
+        }
+        vTaskDelay(pdMS_TO_TICKS(SEN_DELAY));
+
+        // Packet to notify
+        uint8_t notify_data[6];
+        notify_data[0] = INA226_NOTIFY;
+        notify_data[1] = INA226_NOTIFY;
+        memcpy(&notify_data[2], &battery, sizeof(float));
+
+        // update status
+        struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+        if (om) {
+            ble_gatts_notify_custom(param->conn_handle, param->attr_handle, om);
+        }  
+    }
+}
+
 // Read sensor functions table
 typedef void (*ble_sensor_read_fn_t)(void *);
 ble_sensor_read_fn_t ble_sensor_read_fn_table[SENSOR_MAX] = {
@@ -159,15 +316,19 @@ bool is_reading[SENSOR_MAX] = {false};
 void ble_sensor_read(uint16_t conn_handle, uint16_t attr_handle, ble_cmd_recv_t data) {
     // Sensor ID
     uint8_t sensor_id = data - SENSOR_MAX;
+    task_param_t *param = malloc(sizeof(task_param_t));
+    param->conn_handle = conn_handle;
+    param->attr_handle = attr_handle;
 
     if (data >= AHT20_READ && data < SENSOR_MAX_READ) {
         // Read
         if (!is_reading[data - SENSOR_MAX]) {
+            // Task for read
             xTaskCreate(
                 ble_sensor_read_fn_table[data - SENSOR_MAX], 
                 task_name[data - SENSOR_MAX] , 
                 2048, 
-                NULL, 
+                param, 
                 5, 
                 &xSensorTaskHandle[data - SENSOR_MAX]
             );
@@ -223,3 +384,4 @@ int ble_sensor_ctrl_cb(uint16_t conn_handle, uint16_t attr_handle,
 
     return 0;
 }
+

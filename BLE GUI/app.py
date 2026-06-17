@@ -5,12 +5,13 @@ import threading
 from bleak import BleakScanner, BleakClient
 from tabs.connect_tab import ConnectTab
 from tabs.sensor_tab import SensorControlTab
+from tabs.chart_tab import ChartTab
 
 class BLEConfigApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ESP32 Sensors Monitor")
-        self.root.geometry("800x400")
+        self.root.geometry("1080x720")
 
         self.client = None
         self.loop = asyncio.new_event_loop()
@@ -22,18 +23,24 @@ class BLEConfigApp:
         self.thread = threading.Thread(target=self.start_async_loop, daemon=True)
         self.thread.start()
 
-    def setup_ui(self):
-        self.status_label = tk.Label(self.root, text="Status: Idle", fg="blue", bd=1, relief=tk.SUNKEN, anchor="w")
-        self.status_label.pack(side="bottom", fill="x")   
-        
+    def setup_ui(self):       
+        self.status_label = tk.Label(self.root, text="Status: Idle", fg="blue", font=("Segoe UI", 12), bd=1, relief=tk.SUNKEN, anchor="w")
+        self.status_label.pack(side="bottom", fill="x")
+
+        style = ttk.Style() 
+        style.configure("TNotebook.Tab", font=("Segoe UI", 12))
         # =================== Tab manager ===================
         self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill="both", expand="True", padx=10, pady=0)
+        self.notebook.pack(fill="both", expand=True, padx=10, pady=0)
 
         self.tab_connect_bluetooth = ConnectTab(self.notebook, self)
         self.notebook.add(self.tab_connect_bluetooth, text="Connect")
+
         self.tab_sensor_control = SensorControlTab(self.notebook, self)
         self.notebook.add(self.tab_sensor_control, text="Sensors")
+
+        self.tab_chart = ChartTab(self.notebook, self)
+        self.notebook.add(self.tab_chart, text="Charts")
         # =================== Tab manager ===================    
 
 
@@ -50,7 +57,7 @@ class BLEConfigApp:
 
         # self.ota_btn = tk.Button(self.root, text="Update OTA", command=self.ota_update)
         # self.ota_btn.pack(pady=5)
-                # --- Quản lý Asyncio Loop ---
+    # --- Quản lý Asyncio Loop ---
     def start_async_loop(self):
         asyncio.set_event_loop(self.loop)
         self.loop.run_forever()
