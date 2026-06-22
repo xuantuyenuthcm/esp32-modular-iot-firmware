@@ -19,7 +19,6 @@ idf_component_register(
         ${COREMQTT_SRCS}
     INCLUDE_DIRS 
         "."
-        "../include"
         "../config"
         "../modules/BLE/include"
         "../modules/MQTT/include"

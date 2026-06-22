@@ -20,14 +20,6 @@
 #include "lwip/netdb.h"
 #include <stdlib.h>
 
-#define CORE_MQTT_CONFIG_H_
-
-#define LogError( message )
-#define LogWarn( message )
-#define LogInfo( message )
-#define LogDebug( message )
-
-
 //Certificate for secure connection
 extern const uint8_t aws_root_ca_start[] asm("_binary_AmazonRootCA1_pem_start");
 extern const uint8_t aws_root_ca_end[]   asm("_binary_AmazonRootCA1_pem_end");

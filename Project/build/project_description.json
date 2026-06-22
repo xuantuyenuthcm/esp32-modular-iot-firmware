@@ -1,7 +1,7 @@
 {
     "version":            "1.3",
     "project_name":       "Project",
-    "project_version":    "73b197c-dirty",
+    "project_version":    "63fd27d-dirty",
     "project_path":       "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project",
     "idf_path":           "D:/esp/v6.0/esp-idf",
     "build_dir":          "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build",
@@ -1841,7 +1841,7 @@
             "managed_priv_reqs": [],
             "file": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/main/libmain.a",
             "sources": [ "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/Project.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/Wifi/wifi_task.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/MQTT/mqtt_task.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/BLE/ble_manager.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/BLE/ble_gatts_svc.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/BLE/gatt_svc_wifi.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/BLE/nvs_manager.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_serializer.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_state.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/AmazonRootCA1.pem.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.crt.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.key.S" ],
-            "include_dirs": [ ".", "../include", "../config", "../modules/BLE/include", "../modules/MQTT/include", "../modules/Wifi/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface" ]
+            "include_dirs": [ ".", "../config", "../modules/BLE/include", "../modules/MQTT/include", "../modules/Wifi/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface" ]
         },
         "mbedtls": {
             "alias": "idf::mbedtls",
@@ -3967,7 +3967,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": [ ".", "../include", "../config", "../modules/BLE/include", "../modules/MQTT/include", "../modules/Wifi/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface" ]
+            "include_dirs": [ ".", "../config", "../modules/BLE/include", "../modules/MQTT/include", "../modules/Wifi/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface" ]
         },
         "i2c_bus": {
             "alias": "idf::i2c_bus",
