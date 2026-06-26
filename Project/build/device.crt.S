@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/certs/device.crt
+/* * Data converted from C:/Users/ASUS/Desktop/esp32-modular-iot-firmware/esp32-modular-iot-firmware/Project/certs/device.crt
  * (null byte appended)
  */
 .data

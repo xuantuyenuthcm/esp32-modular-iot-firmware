@@ -18,8 +18,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/bootloader/bootloader.elf
+    add-symbol-file C:/Users/ASUS/Desktop/esp32-modular-iot-firmware/esp32-modular-iot-firmware/Project/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/Project.elf
+file C:/Users/ASUS/Desktop/esp32-modular-iot-firmware/esp32-modular-iot-firmware/Project/build/iot_firmware.elf

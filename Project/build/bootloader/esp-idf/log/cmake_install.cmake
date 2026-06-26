@@ -1,4 +1,4 @@
-# Install script for directory: D:/esp/v6.0/esp-idf/components/log
+# Install script for directory: C:/esp/v6.0/esp-idf/components/log
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,6 +40,6 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/bootloader/esp-idf/log/install_local_manifest.txt"
+  file(WRITE "C:/Users/ASUS/Desktop/esp32-modular-iot-firmware/esp32-modular-iot-firmware/Project/build/bootloader/esp-idf/log/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
